@@ -12,7 +12,7 @@ public class PnZModel extends Observable {
 
 	public static final int PASS=1;
 	public static final int FAIL=0;
-	private Plant grid[][]; 										//user placed plants
+	private Npc grid[][]; 										//user placed plants
 	private ArrayList<String> upcoming;								//list of upcoming enemies for user
 	private Enemy enemies[][];										//grid of enemies where they will be before game start
 	private int remaining;											// number of remaining enemies
@@ -21,12 +21,11 @@ public class PnZModel extends Observable {
 	private int sunPoints;
 	
 	public PnZModel(){
-		grid = new Plant[5][5]; 									//init plant grid
+		grid = new Npc[5][10]; 									//init plant grid
 		upcoming = new ArrayList<String>(); 						//init list of coming up
-		enemies = new Enemy[5][10];									//init enemy grid
 		for (int i=0; i<5;i++){ 									//add 5 zombies both grid and list of upcomings
 			upcoming.add("zombie");
-			enemies[i][5]= new Enemy("zombie", 5, 1);
+			grid[i][5]= new Enemy("zombie", 5, 1);
 		}
 		sunPoints = 100;
 		level=1; 													//set level to 1
@@ -52,8 +51,10 @@ public class PnZModel extends Observable {
 						int col=firstInRow(row);
 						System.out.println("test: "+col);
 						damagePlants(turn,row);							//zombie damages to plants
-						if(col-turn<5 && enemies[row][col].damaged(damage)!=-1){		//damage the zombie
-							enemies[row][col]=null;
+						if (grid[row][col].getClass()==Enemy.class){
+							if(col<5 && grid[row][col].damaged(damage)!=-1){		//damage the zombie
+								grid[row][col]=null;
+							}
 						}
 					}else{											  	//all monsters in row defeated remove row from play
 						validRows.remove(row);
@@ -70,23 +71,17 @@ public class PnZModel extends Observable {
 	}
 	
 	public void damagePlants(int turn, int row) {			//find where zombies are overlapping plants to damage them
-		if (turn>firstInRow(row)){							//if the first in row is behind overlapped columns they can't interact
-			int over = turn-firstInRow(row);				//number of possible overlapped columns 
-			for (int i=over;i!=0;i--){						//scan possible columns
-				if(grid[row][5-over]!=null){				//if there is a plant damage it
-					grid[row][5-over].damaged(enemies[row][firstInRow(row)].getDamage());
-					System.out.println("Damage to plant! "+ enemies[row][firstInRow(row)].getDamage());
-				}else{										//otherwise do nothing
-					System.out.println("No damage to plant!");
-				}
+		if(grid[row][firstInRow(row)-1]!=null){				//if the space next to a zombie has a plant make the zombie damage it
+			if(grid[row][firstInRow(row)-1].getClass()==Plant.class){
+				grid[row][firstInRow(row)-1].damaged(grid[row][firstInRow(row)].getDamage());
 			}
 		}
 	}
 
 	public int firstInRow(int row){					//find the first zombie in a given row
 		for (int i=0;i<10;i++){						//for all columns
-			if (enemies[row][i]!=null){				//if there is an entity
-				if (enemies[row][i].getHealth()>0){	//and it isn't dead
+			if (grid[row][i]!=null && grid[row][i].getClass()==Enemy.class){				//if there is an entity
+				if (grid[row][i].getHealth()>0){	//and it isn't dead
 					return i;						//return the column it is in
 				}
 			}
@@ -150,17 +145,11 @@ public class PnZModel extends Observable {
 	public String toString() {
 		String show="";
 		for(int row=0;row<5;row++){
-			for(int i=0; i<5;i++){
+			for(int i=0; i<10;i++){
 				if(grid[row][i]!=null){
 					show+="   "+grid[row][i].getType();
 				}else{
-					show+="   Pempty";
-				}
-			
-				if(enemies[row][i+turn]!=null){
-					show+=""+enemies[row][i+turn].getType();
-				}else{
-					show+="Zempty";
+					show+="   Empty";
 				}
 			}
 			show=show+"\n";
