@@ -1,9 +1,12 @@
 package model;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Scanner;
 
 public class PnZModel extends Observable {
 
@@ -15,7 +18,7 @@ public class PnZModel extends Observable {
 	private int remaining;											// number of remaining enemies
 	private int level; 												//current level
 	private int turn;												//current turn
-	private int money;
+	private int sunPoints;
 	
 	public PnZModel(){
 		grid = new Plant[5][5]; 									//init plant grid
@@ -25,6 +28,7 @@ public class PnZModel extends Observable {
 			upcoming.add("zombie");
 			enemies[i][5]= new Enemy("zombie", 5, 1);
 		}
+		sunPoints = 100;
 		level=1; 													//set level to 1
 		
 	}
@@ -105,10 +109,33 @@ public class PnZModel extends Observable {
 	 */
 	public static void main(String[] args) {
 		PnZModel pz = new PnZModel();    				//new game
-		Plant bd = new PeaShooter();     				//define what plant
-		for (int r=0;r<5;r++){							//place 1 plant in each row in the first column
-			pz.placePlant(r, 0, bd);
+		Plant ps = new PeaShooter();     				//define what plant
+		Plant sf = new Sunflower();
+		boolean cont=true;
+		Scanner sc = new Scanner(System.in);
+		while (pz.sunPoints!=0 && cont){							//place 1 plant in each row in the first column
+			System.out.println("Please type a row number, column number, and plant type or type -1 to continue");
+			int row = sc.nextInt();
+			if (row==-1){
+				cont=false;
+			}else{
+				int col = sc.nextInt();
+				String type = sc.next();
+				if (type.equals("Sunflower")){
+					pz.placePlant(row, col, sf);
+					pz.sunPoints -= sf.getCost();
+				}else if (type.equals("Peashooter")){
+					pz.placePlant(row, col, ps);
+					pz.sunPoints -= ps.getCost();
+				}else{
+					System.out.println("couldn't find plant type please try again");
+				}
+				System.out.println("Sun Points: "+pz.sunPoints);
+				
+			}
 		}
+		
+		System.out.println(pz.upcoming);
 		System.out.println("Wave Starting");
 		int res = pz.startWave(); 
 		if (res>0){
@@ -140,6 +167,14 @@ public class PnZModel extends Observable {
 		}
 		
 		return show;
+	}
+
+	public int getSunPoints() {
+		return sunPoints;
+	}
+
+	public void addSunPoints(int sunPoints) {
+		this.sunPoints += sunPoints;
 	}
 
 }
