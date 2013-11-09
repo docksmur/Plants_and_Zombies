@@ -1,11 +1,13 @@
 package model;
 
+import java.util.Observable;
+
 public class Plant extends Npc {
 	
 	int cost;
 	
-	public Plant(String type, int health, int damage, int cost){
-		super(type, health, damage);
+	public Plant(String type, int health, int damage, int cost, Observable pnz){
+		super(type, health, damage, pnz);
 		this.cost=cost;
 	}
 

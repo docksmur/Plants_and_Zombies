@@ -5,8 +5,8 @@ import java.util.Observer;
 
 public class Sunflower extends Plant implements Observer{
 	
-	public Sunflower(){
-		super("Sunflower",1, 0, 1);
+	public Sunflower(Observable pnz){
+		super("Sunflower",1, 0, 1, pnz);
 	}
 	
 	public void play(Observable arg0){

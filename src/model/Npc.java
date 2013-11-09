@@ -9,12 +9,45 @@ public class Npc implements Observer{
 	protected int health;		//current health of the npc
 	protected int damage;		//the amount of damage the npc can do
 	
-	public Npc(String type, int health, int damage){
+	public Npc(String type, int health, int damage, Observable pnz){
 		this.type = type;		//set the type of npc
 		this.health = health;	//set its starting health
 		this.damage = damage;	//set the amount of damage
+		pnz.addObserver(this);
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + damage;
+		result = prime * result + health;
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		//System.out.println("equal compare");
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Npc other = (Npc) obj;
+		if (damage != other.damage)
+			return false;
+		if (health != other.health)
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
+
 	public String getType() {
 		return type;
 	}
