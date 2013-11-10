@@ -29,6 +29,10 @@ public class Enemy extends Npc {
 								return -1;
 							}
 							return 1;
+						}else{
+							if(n.get(place-1).damaged(this.getDamage())!=-1){
+								n.set(place-1, null);
+							}
 						}
 					}
 				}

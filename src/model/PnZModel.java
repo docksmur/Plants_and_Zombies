@@ -122,24 +122,40 @@ public class PnZModel extends Observable {
 		boolean cont=true;
 		Scanner sc = new Scanner(System.in);
 		while (pz.sunPoints!=0 && cont){							//place 1 plant in each row in the first column
-			System.out.println("Please type a row number, column number, and plant type (Peashooter or Sunflower) or type -1 to continue");
-			int row = sc.nextInt();
+			System.out.println("Please type a row number, column number, and plant type (p for Peashooter or s for Sunflower) or type -1 to continue");
+			int row=-10;
+			boolean int_test=false;
+			try {
+				sc.reset();
+				row = Integer.parseInt(sc.next());
+				int_test=true;
+			} catch (NumberFormatException e) {
+				System.out.println("not a number. please try again");
+			}
 			if (row==-1){
 				cont=false;
-			}else{
-				int col = sc.nextInt();
-				String type = sc.next();
-				if (type.equalsIgnoreCase("Sunflower")){
-					pz.placePlant(row, col, sf);
-					pz.sunPoints -= sf.getCost();
-				}else if (type.equalsIgnoreCase("Peashooter")){
-					pz.placePlant(row, col, ps);
-					pz.sunPoints -= ps.getCost();
-				}else{
-					System.out.println("couldn't find plant type please try again");
+			}else if(int_test){
+				int col=-10;
+				int_test=false;
+				try {
+					col = sc.nextInt();
+					int_test=true;
+				} catch (Exception e) {
+					System.out.println("not a number. please try again");
 				}
-				System.out.println("Sun Points: "+pz.sunPoints);
-				
+				if(int_test){
+					String type = sc.next();
+					if (type.equalsIgnoreCase("S")){
+						pz.placePlant(row, col, sf);
+						pz.sunPoints -= sf.getCost();
+					}else if (type.equalsIgnoreCase("P")){
+						pz.placePlant(row, col, ps);
+						pz.sunPoints -= ps.getCost();
+					}else{
+						System.out.println("couldn't find plant type please try again");
+					}
+					System.out.println(""+pz);
+				}
 			}
 		}
 		
@@ -160,14 +176,18 @@ public class PnZModel extends Observable {
 		for(int row=0;row<5;row++){
 			for(Npc n:grid.get(row)){
 				if(n!=null){
-					show+="   "+n.getType();
+					if (n instanceof Enemy){
+						show+=""+n.getType()+"\t\t";
+					}else{
+						show+=""+n.getType()+"\t";
+					}
 				}else{
-					show+="   Empty";
+					show+="Empty\t\t";
 				}
 			}
 			show=show+"\n";
 		}
-		
+		show=show+"\nSun Points: "+this.getSunPoints();
 		return show;
 	}
 
@@ -193,6 +213,19 @@ public class PnZModel extends Observable {
 
 	public void setRunning(boolean running) {
 		this.running = running;
+	}
+
+	public void placePlant(int row, int col, String s) {
+		Plant ps = new PeaShooter(this);     			//define what plant
+		Plant sf = new Sunflower(this);
+		if (s.equalsIgnoreCase("Sunflower")){
+			this.placePlant(row, col, sf);
+			this.sunPoints -= sf.getCost();
+		}else if (s.equalsIgnoreCase("Pea Shooter")){
+			this.placePlant(row, col, ps);
+			this.sunPoints -= ps.getCost();
+		}
+		
 	}
 	
 }
