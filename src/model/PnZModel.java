@@ -122,17 +122,17 @@ public class PnZModel extends Observable {
 		boolean cont=true;
 		Scanner sc = new Scanner(System.in);
 		while (pz.sunPoints!=0 && cont){							//place 1 plant in each row in the first column
-			System.out.println("Please type a row number, column number, and plant type or type -1 to continue");
+			System.out.println("Please type a row number, column number, and plant type (Peashooter or Sunflower) or type -1 to continue");
 			int row = sc.nextInt();
 			if (row==-1){
 				cont=false;
 			}else{
 				int col = sc.nextInt();
 				String type = sc.next();
-				if (type.equals("Sunflower")){
+				if (type.equalsIgnoreCase("Sunflower")){
 					pz.placePlant(row, col, sf);
 					pz.sunPoints -= sf.getCost();
-				}else if (type.equals("Peashooter")){
+				}else if (type.equalsIgnoreCase("Peashooter")){
 					pz.placePlant(row, col, ps);
 					pz.sunPoints -= ps.getCost();
 				}else{
