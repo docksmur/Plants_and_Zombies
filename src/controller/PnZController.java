@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 import model.PnZModel;
 
@@ -14,9 +15,11 @@ import view.PnZView;
 public class PnZController implements ActionListener {
 	
 	PnZModel pnzm;
+	PnZView pnzv;
 	
-	public PnZController(PnZModel pnzm){
+	public PnZController(PnZModel pnzm, PnZView pnzv){
 		this.pnzm = pnzm;
+		this.pnzv = pnzv;
 	}
 
 	@Override
@@ -30,16 +33,18 @@ public class PnZController implements ActionListener {
 			pnzm.startWave();
 		}else{
 			String[] things = name.split(",");
-			System.out.println(things[1]+" "+things[2]);
+			//System.out.println(things[1]+" "+things[2]);
 			int row = Integer.parseInt(things[1]);
 			int col = Integer.parseInt(things[2]);
-			System.out.println(row+" "+col);
+			//System.out.println(row+" "+col);
 			Object[] possibilities = {"Sunflower", "Pea Shooter"};
 			String s = (String)JOptionPane.showInputDialog(new JFrame(),"What type of plant would you like to add?","Customized Dialog",
 			                    JOptionPane.QUESTION_MESSAGE, null, possibilities, "");
 			pnzm.placePlant(row, col, s);
 			b.setText(s);
 			b.setEnabled(false);
+			JTextArea ja = (JTextArea) pnzv.getContentPane().getComponent(26);
+			ja.setText("Sun Points: "+pnzm.getSunPoints());
 		}
 	}
 

@@ -19,19 +19,25 @@ public class Enemy extends Npc {
 			for (Npc e:n){
 				if (e instanceof Enemy){
 					Enemy en = (Enemy) e;
+					//System.out.println("it's an enemy");
 					if (this.equals(en)){
 						//System.out.println("they are equal"+ this.number+en.getNumber());
 						int place = n.indexOf(e);
-						if(n.get(place-1)==null){
-							n.set(place, null);
-							n.set(place-1, e);
-							if(place==1){
-								return -1;
-							}
-							return 1;
+						if(place==0){
+							return -1;
 						}else{
-							if(n.get(place-1).damaged(this.getDamage())!=-1){
-								n.set(place-1, null);
+							if(n.get(place-1)==null){
+								n.set(place, null);
+								n.set(place-1, e);
+								if(place==1){
+									return -1;
+								}
+								return 1;
+							}else{
+								if(n.get(place-1).damaged(this.getDamage())!=-1){
+									n.set(place-1, null);
+									return 50;
+								}
 							}
 						}
 					}
@@ -45,6 +51,7 @@ public class Enemy extends Npc {
 	public void update(Observable arg0, Object arg1) {
 		PnZModel thing = ((PnZModel)arg0);
 		int over = move(thing.getGrid());
+		//System.out.println("result of z move "+over);
 		if (over==-1){
 			thing.setRunning(false);
 		}

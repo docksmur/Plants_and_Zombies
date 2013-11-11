@@ -18,7 +18,7 @@ public class PnZModel extends Observable {
 	private int remaining;											// number of remaining enemies
 	private boolean running;
 	private int level; 												//current level
-	private int turn;												//current turn
+	private int turn=0;												//current turn
 	private int sunPoints;
 	
 	public PnZModel(){
@@ -45,19 +45,22 @@ public class PnZModel extends Observable {
 	}
 	
 	public int startWave(){
+		if(turn==0){
+			this.setChanged();
+			notifyObservers();
+		}
 		ArrayList<Integer> validRows = new ArrayList<Integer>();		//list of rows with remaining enemies
 		Integer[] temp={0,1,2,3,4};										//all rows initially are active
 		validRows.addAll(Arrays.asList(temp));
-		while (running && remaining>0){								//turn is the number of columns enemy grid overlaps the play grid
-			System.out.println(this);
+		//while (running && remaining>0){								//turn is the number of columns enemy grid overlaps the play grid
 			int damage = 0;
 			for (Integer row=0;row<5;row++){							//damage is calculated for each row
+				//System.out.println(""+this);
 				if (validRows.contains(row)){							//if this row is valid get the damage of plants in this row
 					damage = getRowDamage(row);
 					if (firstInRow(row)!=-1){							//if there is a monster find the first one
 						int col=firstInRow(row);
 						//System.out.println("row: "+row+" col: "+col);
-						damagePlants(turn,row);							//zombie damages to plants
 						if (grid.get(row).get(col).getClass()==Enemy.class){
 							if(col<5 && grid.get(row).get(col).damaged(damage)!=-1){		//damage the zombie
 								grid.get(row).set(col,null);
@@ -70,24 +73,22 @@ public class PnZModel extends Observable {
 					}
 				}
 			}
+			//System.out.println("notified");
+		//}
+		//this.setRunning(false);
+		//this.setChanged();
+		//notifyObservers();
+		//System.out.println(""+this);
+		turn++;
+		if(remaining==0){					//if there are no enemies by the end pass
+			running = false;
 			this.setChanged();
 			notifyObservers();
-			//System.out.println("notified");
-		}
-		System.out.println(""+this);
-		if(remaining==0){					//if there are no valid rows by the end pass
 			return PASS;
 		}else{										//otherwise the user has lost
+			this.setChanged();
+			notifyObservers();
 			return FAIL;
-		}
-	}
-	
-	public void damagePlants(int turn, int row) {			//find where zombies are overlapping plants to damage them
-		int fir = firstInRow(row);
-		if(grid.get(row).get(fir-1) != null){				//if the space next to a zombie has a plant make the zombie damage it
-			if(grid.get(row).get(firstInRow(row)-1).getClass()==Plant.class){
-				grid.get(row).get(firstInRow(row)-1).damaged(grid.get(row).get(firstInRow(row)).getDamage());
-			}
 		}
 	}
 
@@ -105,7 +106,7 @@ public class PnZModel extends Observable {
 	public int getRowDamage(int row){				//get the total damage a row will do to the first zombie
 		int damage = 0;
 		for (int col=0; col<5; col++){				//each plant in a row adds its damage
-			if (grid.get(row).get(col)!=null){
+			if (grid.get(row).get(col)!=null && grid.get(row).get(col) instanceof Plant){
 				damage += grid.get(row).get(col).getDamage();
 			}
 		}
@@ -115,7 +116,7 @@ public class PnZModel extends Observable {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		PnZModel pz = new PnZModel();    				//new game
 		Plant ps = new PeaShooter(pz);     			//define what plant
 		Plant sf = new Sunflower(pz);
@@ -169,7 +170,7 @@ public class PnZModel extends Observable {
 		}
 
 	}
-
+*/
 	@Override
 	public String toString() {
 		String show="";
@@ -216,16 +217,20 @@ public class PnZModel extends Observable {
 	}
 
 	public void placePlant(int row, int col, String s) {
-		Plant ps = new PeaShooter(this);     			//define what plant
-		Plant sf = new Sunflower(this);
 		if (s.equalsIgnoreCase("Sunflower")){
+			Plant sf = new Sunflower(this);
 			this.placePlant(row, col, sf);
 			this.sunPoints -= sf.getCost();
 		}else if (s.equalsIgnoreCase("Pea Shooter")){
+			Plant ps = new PeaShooter(this);
 			this.placePlant(row, col, ps);
 			this.sunPoints -= ps.getCost();
 		}
 		
+	}
+
+	public int getRemaining() {
+		return remaining;
 	}
 	
 }
