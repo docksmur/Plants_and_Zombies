@@ -6,10 +6,12 @@ import java.util.Observable;
 public class Enemy extends Npc {
 	
 	int number=100;
+	PnZModel pnzm;
 
 	public Enemy(String type, int health, int damage, int i, Observable pnz){
 		super(type, health, damage, pnz);
 		this.number = i;
+		pnzm = (PnZModel) pnz;
 		pnz.addObserver(this);
 	}
 	
@@ -33,9 +35,14 @@ public class Enemy extends Npc {
 									return -1;
 								}
 								return 1;
-							}else{
+							}else {
+								if(n.get(place-1) instanceof Sunflower){
+									Sunflower s = (Sunflower) n.get(place-1);
+									s.setDisabled();
+								}
 								if(n.get(place-1).damaged(this.getDamage())!=-1){
-									n.set(place-1, null);
+									
+									n.set(place-1,null);
 									return 50;
 								}
 							}

@@ -232,6 +232,11 @@ public class PnZModel extends Observable {
 		observers.add(o);
 	}
 	
+	@Override
+	public void deleteObserver(Observer o){
+		observers.remove(o);
+	}
+	
 
 	@Override
 	public void notifyObservers(){
