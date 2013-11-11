@@ -3,27 +3,33 @@ package model;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * 
+ * an npc
+ * @author Murdock Walsh
+ * @author David Falardeau
+ * @version ver 1.4.1
+ * 
+ */
+
 public class Npc extends Observable implements Observer{
 	
 	protected String type;	//name of this type of npc
 	protected int health;		//current health of the npc
 	protected int damage;		//the amount of damage the npc can do
 	
+	/**
+	 * Create an Npc
+	 * 
+	 * @param type the type of the npc
+	 * @param health the health of the npc
+	 * @param damage the damage of the npc
+	 * @param pnz the observable
+	 */
 	public Npc(String type, int health, int damage, Observable pnz){
 		this.type = type;		//set the type of npc
 		this.health = health;	//set its starting health
 		this.damage = damage;	//set the amount of damage
-		//pnz.addObserver(this);
-	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + damage;
-		result = prime * result + health;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
 	}
 
 	@Override
@@ -48,18 +54,39 @@ public class Npc extends Observable implements Observer{
 		return true;
 	}
 
+	/**
+	 * Get the Npc type
+	 * 
+	 * @return the type of npc
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * Get the Npc health
+	 * 
+	 * @return the health of the npc
+	 */
 	public int getHealth() {
 		return health;
 	}
 
+	/**
+	 * Get the Npc damage
+	 * 
+	 * @return the damage of the npc
+	 */
 	public int getDamage() {
 		return damage;
 	}
 	
+	/**
+	 * Apply damage to the Npc
+	 * 
+	 * @param damage the damage to be done to this npc
+	 * @return -1 if it wasn't a deadly hit or the extra damage if it was a deadly hit
+	 */
 	public int damaged(int damage){
 		if (damage>=health){		//if it is lethal damage return the excess damage
 			health = 0;
@@ -71,7 +98,7 @@ public class Npc extends Observable implements Observer{
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1) {
+	public void update(Observable o, Object obj) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -16,12 +16,25 @@ import model.PnZModel;
 
 import controller.PnZController;
 
+/**
+ * 
+ * the view of Plants and Zombies to show the user
+ * @author Murdock Walsh
+ * @author David Falardeau
+ * @version ver 1.4.1
+ *
+ */
+
 public class PnZView extends JFrame implements Observer{
 	
-	private JPanel jp;
-	private PnZModel pnzm;
-	private PnZController pnzc;
+	private JPanel jp;				//the content pane
+	private PnZModel pnzm;			//the model
+	private PnZController pnzc;		//the controller
 	
+	
+	/**
+	 * create a new view
+	 */
 	public PnZView(){
 		super();
 		jp = new JPanel(new GridLayout(6,5));
@@ -53,10 +66,20 @@ public class PnZView extends JFrame implements Observer{
 		pzv.setVisible(true);
 	}
 
+	/**
+	 * Get the model
+	 * 
+	 * @return the model
+	 */
 	public PnZModel getPnzm() {
 		return pnzm;
 	}
 
+	/**
+	 * Set the model
+	 * 
+	 * @param pnzm the new model
+	 */
 	public void setPnzm(PnZModel pnzm) {
 		this.pnzm = pnzm;
 	}

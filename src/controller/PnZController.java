@@ -12,11 +12,27 @@ import model.PnZModel;
 
 import view.PnZView;
 
+/**
+ * 
+ * The controller to interpret and apply user input
+ * @author Murdock Walsh
+ * @author David Falardeau
+ * @version ver 1.4.1
+ * 
+ */
+
+
 public class PnZController implements ActionListener {
 	
 	PnZModel pnzm;
 	PnZView pnzv;
 	
+	/**
+	 * Create new controller
+	 * 
+	 * @param pnzm the model
+	 * @param pnzv the view
+	 */
 	public PnZController(PnZModel pnzm, PnZView pnzv){
 		this.pnzm = pnzm;
 		this.pnzv = pnzv;
