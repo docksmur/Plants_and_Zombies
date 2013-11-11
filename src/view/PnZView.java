@@ -44,6 +44,7 @@ public class PnZView extends JFrame implements Observer{
 		ja.setEditable(false);
 		jp.add(ja);
 		this.setContentPane(jp);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
 	public static void main(String[] args) {

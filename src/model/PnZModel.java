@@ -14,6 +14,7 @@ public class PnZModel extends Observable {
 	public static final int FAIL=0;
 	private ArrayList<ArrayList<Npc>> grid; 						//user placed plants
 	private ArrayList<String> upcoming;								//list of upcoming enemies for user
+	private ArrayList<Observer> observers;
 	private Enemy enemies[][];										//grid of enemies where they will be before game start
 	private int remaining;											// number of remaining enemies
 	private boolean running;
@@ -26,6 +27,7 @@ public class PnZModel extends Observable {
 		upcoming = new ArrayList<String>(); 						//init list of coming up
 		remaining=0;
 		running=true;
+		observers = new ArrayList<Observer>();
 		for (int i=0; i<5;i++){ 									//add 5 zombies both grid and list of upcomings
 			grid.add(new ArrayList<Npc>(10));
 			for (int j=0; j<10;j++){
@@ -45,10 +47,6 @@ public class PnZModel extends Observable {
 	}
 	
 	public int startWave(){
-		if(turn==0){
-			this.setChanged();
-			notifyObservers();
-		}
 		ArrayList<Integer> validRows = new ArrayList<Integer>();		//list of rows with remaining enemies
 		Integer[] temp={0,1,2,3,4};										//all rows initially are active
 		validRows.addAll(Arrays.asList(temp));
@@ -227,6 +225,22 @@ public class PnZModel extends Observable {
 			this.sunPoints -= ps.getCost();
 		}
 		
+	}
+	
+	@Override
+	public void addObserver(Observer o){
+		observers.add(o);
+	}
+	
+
+	@Override
+	public void notifyObservers(){
+		if (hasChanged()){
+			for (Observer o:observers){
+				o.update(this, null);
+				//System.out.println(o.getType()+" "+this.getSunPoints());
+			}
+		}
 	}
 
 	public int getRemaining() {

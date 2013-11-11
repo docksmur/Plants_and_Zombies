@@ -13,7 +13,7 @@ public class Npc extends Observable implements Observer{
 		this.type = type;		//set the type of npc
 		this.health = health;	//set its starting health
 		this.damage = damage;	//set the amount of damage
-		pnz.addObserver(this);
+		//pnz.addObserver(this);
 	}
 	
 	@Override
