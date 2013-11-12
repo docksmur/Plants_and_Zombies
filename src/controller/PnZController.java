@@ -41,27 +41,24 @@ public class PnZController implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent o) {
 		Object o2 = o.getSource();
-		//PnZModel pnzm = ((PnZView)o).getPnzm();
 		JButton b;
-		b = (JButton) o2;
+		b = (JButton) o2;						//make source a button and get its name
 		String name = b.getName();
-		if (name.equalsIgnoreCase("start")){
+		if (name.equalsIgnoreCase("start")){	//if it's start start the wave
 			pnzm.startWave();
 		}else{
-			String[] things = name.split(",");
-			//System.out.println(things[1]+" "+things[2]);
+			String[] things = name.split(",");	//otherwise it's a place plant so place a plant
 			int row = Integer.parseInt(things[1]);
 			int col = Integer.parseInt(things[2]);
-			//System.out.println(row+" "+col);
-			Object[] possibilities = {"Sunflower", "Pea Shooter"};
+			Object[] possibilities = {"Sunflower", "Pea Shooter"};//get the type of plant
 			String s = (String)JOptionPane.showInputDialog(new JFrame(),"What type of plant would you like to add?","Customized Dialog",
 			                    JOptionPane.QUESTION_MESSAGE, null, possibilities, "");
-			if (pnzm.placePlant(row, col, s)){
+			if (pnzm.placePlant(row, col, s)){	//only plant it if there is enough money
 				b.setText(s);
 				b.setEnabled(false);
 				JTextArea ja = (JTextArea) pnzv.getContentPane().getComponent(26);
 				ja.setText("Sun Points: "+pnzm.getSunPoints());
-			}else{
+			}else{								//otherwise tell the user they don't have enough money
 				JOptionPane.showMessageDialog(new JFrame(), "Placement Failed: out of money");
 			}
 		}
