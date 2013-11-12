@@ -58,9 +58,13 @@ public class PnZModel extends Observable {
 	 * @param col the row to place the plant in
 	 * @param plant the plant that should be placed
 	 */
-	public void placePlant(int row, int col, Plant plant){
-		grid.get(row).set(col, plant);						//place plant at specific row and column
-		this.sunPoints -= plant.getCost();					//subtract the cost of the plant
+	public boolean placePlant(int row, int col, Plant plant){
+		if (this.sunPoints - plant.getCost()>=0){
+			grid.get(row).set(col, plant);						//place plant at specific row and column
+			this.sunPoints -= plant.getCost();					//subtract the cost of the plant
+			return true;
+		}
+		return false;
 	}
 	
 	/** 
@@ -70,15 +74,15 @@ public class PnZModel extends Observable {
 	 * @param col the row to place the plant in
 	 * @param type string representing the type of plant that should be placed
 	 */
-	public void placePlant(int row, int col, String type){
+	public boolean placePlant(int row, int col, String type){
 		if (type.equalsIgnoreCase("Sunflower")){
 			Plant sf = new Sunflower(this);
-			this.placePlant(row, col, sf);
+			return this.placePlant(row, col, sf);
 		}else if (type.equalsIgnoreCase("Pea Shooter")){
 			Plant ps = new PeaShooter(this);
-			this.placePlant(row, col, ps);
+			return this.placePlant(row, col, ps);
 		}
-		
+		return false;
 	}
 	
 	/**
@@ -156,7 +160,19 @@ public class PnZModel extends Observable {
 	}
 	
 
-	/*public static void main(String[] args) {
+	/*		Main function for text based. 
+	 * 		Removed because it kept running this as opposed to the other main function.
+	 * 		It was really annoying.
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	  public static void main(String[] args) {
 		PnZModel pz = new PnZModel();    				//new game
 		Plant ps = new PeaShooter(pz);     			//define what plant
 		Plant sf = new Sunflower(pz);
@@ -292,7 +308,6 @@ public class PnZModel extends Observable {
 		if (hasChanged()){
 			for (Observer o:observers){
 				o.update(this, null);
-				//System.out.println(o.getType()+" "+this.getSunPoints());
 			}
 		}
 	}

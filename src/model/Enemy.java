@@ -42,34 +42,32 @@ public class Enemy extends Npc {
 	 * @return
 	 */
 	public int move(ArrayList<ArrayList<Npc>> grid){
-		//System.out.println("number: "+ this.number);
 		for (ArrayList<Npc> n:grid){
 			for (Npc e:n){
-				if (e instanceof Enemy){
+				if (e instanceof Enemy){				//go through the npc grid to find this object
 					Enemy en = (Enemy) e;
-					//System.out.println("it's an enemy");
 					if (this.equals(en)){
-						//System.out.println("they are equal"+ this.number+en.getNumber());
 						int place = n.indexOf(e);
-						if(place==0){
-							return -1;
+						if(place==0){					//if the place is 0 the game is over
+							return -1;					//game over
 						}else{
-							if(n.get(place-1)==null){
+							if(n.get(place-1)==null){	//if the next place is empty move there
 								n.set(place, null);
 								n.set(place-1, e);
 								if(place==1){
-									return -1;
+									return -1;			//if the place you move to is the last col the game is over
 								}
-								return 1;
+								return 1; 				//moved
 							}else {
-								if(n.get(place-1) instanceof Sunflower){
-									Sunflower s = (Sunflower) n.get(place-1);
-									s.setDisabled();
-								}
-								if(n.get(place-1).damaged(this.getDamage())!=-1){
-									
+								if(n.get(place-1).damaged(this.getDamage())!=-1){	//if it's a lethal hit remove the plant
+									if(n.get(place-1) instanceof Sunflower){		//if it's a sunflower make sure it stops producing
+										Sunflower s = (Sunflower) n.get(place-1);
+										s.setDisabled();
+									}
 									n.set(place-1,null);
-									return 50;
+									return 50;					//hit and killed
+								}else{
+									return 25; 					//hit but didn't kill
 								}
 							}
 						}
@@ -77,15 +75,14 @@ public class Enemy extends Npc {
 				}
 			}
 		}
-		return 0;
+		return 0; 												//wasn't this zombie
 	}
 	
 	@Override
 	public void update(Observable o, Object obj) {
 		PnZModel thing = ((PnZModel)o);
-		int over = move(thing.getGrid());
-		//System.out.println("result of z move "+over);
-		if (over==-1){
+		int over = move(thing.getGrid()); 	//move this zombie
+		if (over==-1){						//end if the zombie is at the end
 			thing.setRunning(false);
 		}
 	}

@@ -56,11 +56,14 @@ public class PnZController implements ActionListener {
 			Object[] possibilities = {"Sunflower", "Pea Shooter"};
 			String s = (String)JOptionPane.showInputDialog(new JFrame(),"What type of plant would you like to add?","Customized Dialog",
 			                    JOptionPane.QUESTION_MESSAGE, null, possibilities, "");
-			pnzm.placePlant(row, col, s);
-			b.setText(s);
-			b.setEnabled(false);
-			JTextArea ja = (JTextArea) pnzv.getContentPane().getComponent(26);
-			ja.setText("Sun Points: "+pnzm.getSunPoints());
+			if (pnzm.placePlant(row, col, s)){
+				b.setText(s);
+				b.setEnabled(false);
+				JTextArea ja = (JTextArea) pnzv.getContentPane().getComponent(26);
+				ja.setText("Sun Points: "+pnzm.getSunPoints());
+			}else{
+				JOptionPane.showMessageDialog(new JFrame(), "Placement Failed: out of money");
+			}
 		}
 	}
 
