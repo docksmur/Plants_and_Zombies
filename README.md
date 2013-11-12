@@ -31,6 +31,7 @@ KNOWN BUGS
 
 
 Pea Shooters placed behind the zombie still do damage to the zombie.
+Implementing the GUI and the changes it made caused the text version to not work as it is. (probably could be fixed easily)
 
 
 USER CONTROLS
