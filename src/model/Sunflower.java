@@ -36,7 +36,7 @@ public class Sunflower extends Plant implements Observer{
 	 */
 	public void play(Observable arg0){
 		PnZModel game = (PnZModel) arg0;
-		game.addSunPoints(sunPoints);
+		game.addSunPoints(sunPoints);		//add sun points to the game
 	}
 	
 	@Override

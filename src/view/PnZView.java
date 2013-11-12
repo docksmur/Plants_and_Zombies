@@ -36,27 +36,27 @@ public class PnZView extends JFrame implements Observer{
 	 * create a new view
 	 */
 	public PnZView(){
-		super();
-		jp = new JPanel(new GridLayout(6,5));
+		super();								//create a new frame for the game
+		jp = new JPanel(new GridLayout(6,5));	//create a grid layout for buttons
 		pnzm = new PnZModel();
-		pnzm.addObserver(this);
-		pnzc = new PnZController(pnzm,this);
+		pnzm.addObserver(this);					//add view as observer so it gets updated
+		pnzc = new PnZController(pnzm,this);	//new controller
 		for (int i=0; i<5; i++){
-			for (int j=0; j<5; j++){
+			for (int j=0; j<5; j++){			//add 25 plant placing buttons
 				JButton b = new JButton("Place plant here");
 				b.setName("button,"+i+","+j);
 				b.addActionListener(pnzc);
 				jp.add(b);
 			}
 		}
-		JButton b = new JButton("Start Wave");
+		JButton b = new JButton("Start Wave");	//add a start button and a text field showing the sun points
 		b.setName("start");
 		b.addActionListener(pnzc);
 		jp.add(b);
 		JTextArea ja = new JTextArea("Sun Points: "+ pnzm.getSunPoints());
 		ja.setEditable(false);
 		jp.add(ja);
-		this.setContentPane(jp);
+		this.setContentPane(jp);				//set the panel as the content pane
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
@@ -86,11 +86,11 @@ public class PnZView extends JFrame implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
-		JTextArea ja = (JTextArea) jp.getComponent(26);
+		JTextArea ja = (JTextArea) jp.getComponent(26);	//get the text box and update sun points
 		ja.setText("Sun Points: "+pnzm.getSunPoints());
-		if(pnzm.isRunning()){
+		if(pnzm.isRunning()){							//make sure game is still running
 			for(int i=0; i<5; i++){
-				for(int j=0; j<5; j++){
+				for(int j=0; j<5; j++){					//if it is running update the buttons to display whatever may be there in the grid
 					JButton b = (JButton)jp.getComponent((5*i)+j);
 					Npc type = pnzm.getGrid().get(i).get(j);
 					if(type != null){
@@ -103,7 +103,7 @@ public class PnZView extends JFrame implements Observer{
 				}
 			}
 			
-		}else{
+		}else{											//if not running disable all buttons after updating
 			for(int i=0; i<5; i++){
 				for(int j=0; j<5; j++){
 					JButton b = (JButton)jp.getComponent((5*i)+j);
@@ -117,9 +117,9 @@ public class PnZView extends JFrame implements Observer{
 					}
 				}
 			}
-			JButton b = (JButton)jp.getComponent(25);
+			JButton b = (JButton)jp.getComponent(25);	//set start button disabled
 			b.setEnabled(false);
-			if(pnzm.getRemaining()==0){
+			if(pnzm.getRemaining()==0){					//display if the user won or lost
 				JOptionPane.showMessageDialog(this, "Game Over you won");
 			}else{
 				JOptionPane.showMessageDialog(this, "Game Over you lost");
