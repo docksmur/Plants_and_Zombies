@@ -30,7 +30,6 @@ the listenersis made. The GUI utilizes the GridLayout class to create a grid of 
 
 utilize the functionality from the previous text based version of the game.
 
-.******Reasons for these choices******ANY OTHER CHOICES******CLASS HIERARCHY*****.
 
 
 
@@ -53,3 +52,18 @@ has been implemented for the game. Unit testing has also been added for PnZModel
 The future roadmap for the project will involve the addition of more types of plants and zombies, as well as the 
 
 addition of Save/Load feature and a Level Builder mechanic.
+
+
+We chose to make Plants and Enemies sibling classes so the could both be represented on the same grid (a much more 
+
+obvious and logical design) which also eliminated the need for a second grid saving space. It was also chosen that
+
+the main function should reside in the PnZView class and not the model. This was simply so that we could easily retain
+
+both the text based version as well as the new GUI version. One other change was to make the plant grid (now npc grid)
+
+into a 2d arraylist as opposed to a regular array. This was done because during coding a problem occured that could be 
+
+easily fixed this way or a lot of coding with arrays. I chose the easy way. Other than that most choices just follow 
+
+the design patterns like MVC and Observer/Observable etc.
