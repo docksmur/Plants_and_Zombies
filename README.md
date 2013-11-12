@@ -19,11 +19,12 @@ README
 
 
 This is the readme file for Milestone 2 of the Plant_and_Zombies programming project. 
-Along with this file includes files that contain the final draft UML diagrams for this 
-second milestone and the Eclipse project files containing all the coding for this second
-milestone. This file will include some of the documentation deliverable elements, such as
-an explanation of design choices and changes to the code files and UML, and an explanation
-of the user controls.
+Included with this file are the final draft UML diagrams (Class and Sequence) for this 
+second milestone, the Eclipse project files containing all the coding for this second
+milestone, as well as unit testing for PnZModel, and a file providing an explanation 
+of design choices, class hierarchy and changes to the code files and UML. This file will 
+include some of the documentation on bugs noted in this draft of the code and an explanation
+of the user controls for the GUI implementation.
 
 
 KNOWN BUGS
