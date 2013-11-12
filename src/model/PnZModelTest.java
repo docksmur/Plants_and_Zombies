@@ -7,73 +7,97 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class PnZModelTest {
+	
+	PnZModel pnzm;
 
 	@Before
 	public void setUp() throws Exception {
+		pnzm = new PnZModel();
 	}
 
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	@Test
 	public void testPnZModel() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testPlacePlantIntIntPlant() {
-		fail("Not yet implemented");
+		assert(pnzm!=null);
 	}
 
 	@Test
 	public void testPlacePlantIntIntString() {
-		fail("Not yet implemented");
+		assert(pnzm.getGrid().get(0).get(0)==null);
+		pnzm.placePlant(0, 0, "Sunflower");
+		assert(pnzm.getGrid().get(0).get(0)!=null);
 	}
 
 	@Test
 	public void testStartWave() {
-		fail("Not yet implemented");
+		pnzm.startWave();
+		assert(pnzm.isRunning());
+		assert(pnzm.getRemaining()>0);
 	}
 
 	@Test
 	public void testFirstInRow() {
-		fail("Not yet implemented");
+		int fir = pnzm.firstInRow(0);
+		assertEquals(fir, 5);
 	}
 
 	@Test
 	public void testGetRowDamage() {
-		fail("Not yet implemented");
+		assertEquals(pnzm.getRowDamage(0),0);
+		pnzm.placePlant(0, 0, "Sunflower");
+		assert(pnzm.getRowDamage(0)>0);
 	}
 
 	@Test
 	public void testGetSunPoints() {
-		fail("Not yet implemented");
+		assertEquals(pnzm.getSunPoints(),100);
+		pnzm.placePlant(0, 0, "Sunflower");
+		assertEquals(pnzm.getSunPoints(),99);
+		pnzm.placePlant(0, 0, "Pea Shooter");
+		assertEquals(pnzm.getSunPoints(),94);
 	}
 
 	@Test
 	public void testAddSunPoints() {
-		fail("Not yet implemented");
+		assertEquals(pnzm.getSunPoints(),100);
+		pnzm.addSunPoints(100);
+		assertEquals(pnzm.getSunPoints(),200);
 	}
 
 	@Test
 	public void testGetGrid() {
-		fail("Not yet implemented");
+		for (int i=0;i<5;i++){
+			assert(pnzm.getGrid().get(i).get(5)!=null);
+		}
+		pnzm.placePlant(4, 4, "Sunflower");
+		assert(pnzm.getGrid().get(4).get(4)!=null);
+		
 	}
 
 	@Test
 	public void testIsRunning() {
-		fail("Not yet implemented");
+		assert(pnzm.isRunning());
 	}
 
 	@Test
 	public void testSetRunning() {
-		fail("Not yet implemented");
+		assert(pnzm.isRunning());
+		pnzm.setRunning(false);
+		assert(!pnzm.isRunning());
 	}
 
 	@Test
 	public void testGetRemaining() {
-		fail("Not yet implemented");
+		assert(pnzm.getRemaining()>0);
+		pnzm.placePlant(0, 0, "Pea Shooter");
+		pnzm.placePlant(1, 0, "Pea Shooter");
+		pnzm.placePlant(2, 0, "Pea Shooter");
+		pnzm.placePlant(3, 0, "Pea Shooter");
+		pnzm.placePlant(4, 0, "Pea Shooter");
+		pnzm.startWave();
+		pnzm.startWave();
+		pnzm.startWave();
+		assert(pnzm.getRemaining()==0);
 	}
 
 }
