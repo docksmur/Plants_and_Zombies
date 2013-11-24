@@ -81,9 +81,12 @@ public class Enemy extends Npc {
 	@Override
 	public void update(Observable o, Object obj) {
 		PnZModel thing = ((PnZModel)o);
-		int over = move(thing.getGrid()); 	//move this zombie
-		if (over==-1){						//end if the zombie is at the end
-			thing.setRunning(false);
+		String s = (String) obj;
+		if (s.equalsIgnoreCase("move")){
+			int over = move(thing.getGrid()); 	//move this zombie
+			if (over==-1){						//end if the zombie is at the end
+				thing.setRunning(false);
+			}
 		}
 	}
 	

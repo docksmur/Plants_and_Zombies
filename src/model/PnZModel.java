@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
+import java.util.Stack;
 
 /**
  * 
@@ -22,33 +23,30 @@ public class PnZModel extends Observable {
 
 	public static final int PASS=1;
 	public static final int FAIL=0;
-	private ArrayList<ArrayList<Npc>> grid; 				//grid of plants(col 0-4) and zombies(col 5-9)
 	private ArrayList<String> upcoming;						//list of upcoming enemies for user
 	private ArrayList<Observer> observers;					//list of observers
 	private int remaining;									// number of remaining enemies
 	private boolean running;								//make sure game is still running
-	private int sunPoints;									//amount of sun points to place plants with
+	private PnZModelData data = new PnZModelData();
+	private Stack<PnZModelData> undoStack;
+	private Stack<PnZModelData> redoStack;
 	
 	
 	/**
 	 * constructor of the model
 	 */
 	public PnZModel(){
-		grid = new ArrayList<ArrayList<Npc>>(5);					//initialize npc grid
+		undoStack = new Stack<PnZModelData>();
+		redoStack = new Stack<PnZModelData>();
 		upcoming = new ArrayList<String>(); 						//initialize list of coming up
 		remaining=0;												//currently no enemies remaining
 		running=true;												//currently running
 		observers = new ArrayList<Observer>();						//list of observers
 		for (int i=0; i<5;i++){ 									//add 5 zombies both grid and list of upcomings
-			grid.add(new ArrayList<Npc>(10));
-			for (int j=0; j<10;j++){								//fill the grid with nulls so there can be empty spaces between entities
-				grid.get(i).add(null);
-			}
 			upcoming.add("zombie");									//add zombie to list of upcoming
-			grid.get(i).set(5, new Enemy("zombie", 5, 1, i, this));	//add zombie to grid
+			data.getGrid().get(i).set(5, new Enemy("zombie", 5, 1, i, this));	//add zombie to grid
 			remaining+=1;											//there is now one more enemy
 		}
-		sunPoints = 100;											//start with 100 sun points
 	}
 	
 	/**
@@ -59,9 +57,10 @@ public class PnZModel extends Observable {
 	 * @param plant the plant that should be placed
 	 */
 	public boolean placePlant(int row, int col, Plant plant){
-		if (this.sunPoints - plant.getCost()>=0){
-			grid.get(row).set(col, plant);						//place plant at specific row and column
-			this.sunPoints -= plant.getCost();					//subtract the cost of the plant
+		if (this.data.getSunPoints() - plant.getCost()>=0){
+			moved();
+			data.getGrid().get(row).set(col, plant);						//place plant at specific row and column
+			this.data.setSunPoints(this.data.getSunPoints() - plant.getCost());					//subtract the cost of the plant
 			return true;
 		}
 		return false;
@@ -91,6 +90,7 @@ public class PnZModel extends Observable {
 	 * @return PASS if you won, FAIL if you lost or are continuing 
 	 */
 	public int startWave(){
+		moved();
 		ArrayList<Integer> validRows = new ArrayList<Integer>();		//list of rows with remaining enemies
 		Integer[] temp={0,1,2,3,4};										//all rows initially are active
 		validRows.addAll(Arrays.asList(temp));								//turn is the number of columns enemy grid overlaps the play grid
@@ -102,9 +102,9 @@ public class PnZModel extends Observable {
 				if (firstInRow(row)!=-1){							//if there is a monster find the first one
 					int col=firstInRow(row);
 					//System.out.println("row: "+row+" col: "+col);
-					if (grid.get(row).get(col).getClass()==Enemy.class){
-						if(col<5 && grid.get(row).get(col).damaged(damage)!=-1){		//damage the zombie
-							grid.get(row).set(col,null);
+					if (data.getGrid().get(row).get(col).getClass()==Enemy.class){
+						if(col<5 && data.getGrid().get(row).get(col).damaged(damage)!=-1){		//damage the zombie
+							data.getGrid().get(row).set(col,null);
 							remaining-=1;
 						}
 					}
@@ -116,7 +116,7 @@ public class PnZModel extends Observable {
 		}
 		//System.out.println("notified");
 		this.setChanged();
-		notifyObservers();
+		notifyObservers("move");
 		//System.out.println(""+this);
 		if(remaining==0){					//if there are no enemies by the end the game is over
 			running = false;
@@ -124,6 +124,11 @@ public class PnZModel extends Observable {
 		}else{										//otherwise the user has lost
 			return FAIL;
 		}
+	}
+
+	private void moved() {
+		undoStack.push(new PnZModelData(data));
+		redoStack.clear();
 	}
 
 	/**
@@ -134,8 +139,8 @@ public class PnZModel extends Observable {
 	 */
 	public int firstInRow(int row){					//find the first zombie in a given row
 		for (int i=0;i<10;i++){						//for all columns
-			if (grid.get(row).get(i)!=null && grid.get(row).get(i).getClass()==Enemy.class){				//if there is an entity
-				if (grid.get(row).get(i).getHealth()>0){	//and it isn't dead
+			if (data.getGrid().get(row).get(i)!=null && data.getGrid().get(row).get(i).getClass()==Enemy.class){				//if there is an entity
+				if (data.getGrid().get(row).get(i).getHealth()>0){	//and it isn't dead
 					return i;						//return the column it is in
 				}
 			}
@@ -152,8 +157,8 @@ public class PnZModel extends Observable {
 	public int getRowDamage(int row){				//get the total damage a row will do to the first zombie
 		int damage = 0;
 		for (int col=0; col<5; col++){				//each plant in a row adds its damage
-			if (grid.get(row).get(col)!=null && grid.get(row).get(col) instanceof Plant){
-				damage += grid.get(row).get(col).getDamage();
+			if (data.getGrid().get(row).get(col)!=null && data.getGrid().get(row).get(col) instanceof Plant){
+				damage += data.getGrid().get(row).get(col).getDamage();
 			}
 		}
 		return damage;
@@ -231,7 +236,7 @@ public class PnZModel extends Observable {
 	public String toString() {
 		String show="";
 		for(int row=0;row<5;row++){
-			for(Npc n:grid.get(row)){
+			for(Npc n:data.getGrid().get(row)){
 				if(n!=null){
 					if (n instanceof Enemy){
 						show+=""+n.getType()+"\t\t";
@@ -254,7 +259,7 @@ public class PnZModel extends Observable {
 	 * @return the amount of sun points
 	 */
 	public int getSunPoints() {
-		return sunPoints;
+		return data.getSunPoints();
 	}
 
 	/**
@@ -263,7 +268,7 @@ public class PnZModel extends Observable {
 	 * @param sunPoints the amount to add to sun points
 	 */
 	public void addSunPoints(int sunPoints) {
-		this.sunPoints += sunPoints;
+		this.data.setSunPoints(this.data.getSunPoints() + sunPoints);
 	}
 
 	/**
@@ -272,7 +277,7 @@ public class PnZModel extends Observable {
 	 * @return the grid of npcs
 	 */
 	public ArrayList<ArrayList<Npc>> getGrid() {
-		return grid;
+		return data.getGrid();
 	}
 
 	/**
@@ -311,6 +316,15 @@ public class PnZModel extends Observable {
 			}
 		}
 	}
+	
+	@Override
+	public void notifyObservers(Object obj){
+		if (hasChanged()){
+			for (Observer o:observers){
+				o.update(this, obj);
+			}
+		}
+	}
 
 	/**
 	 * Get the number of enemies left
@@ -319,6 +333,41 @@ public class PnZModel extends Observable {
 	 */
 	public int getRemaining() {
 		return remaining;
+	}
+
+	public Stack<PnZModelData> getRedoStack() {
+		return redoStack;
+	}
+
+	public void setRedoStack(Stack<PnZModelData> redoStack) {
+		this.redoStack = redoStack;
+	}
+
+	public Stack<PnZModelData> getUndoStack() {
+		return undoStack;
+	}
+
+	public void setUndoStack(Stack<PnZModelData> undoStack) {
+		this.undoStack = undoStack;
+	}
+
+	public void undo() {
+		if (!undoStack.empty()){
+			System.out.println("undo!");
+			data = undoStack.peek();
+			redoStack.push(undoStack.pop());
+			setChanged();
+			notifyObservers("undo");
+		}
+	}
+
+	public void redo() {
+		if (!redoStack.empty()){
+			data = redoStack.peek();
+			undoStack.push(redoStack.pop());
+			setChanged();
+			notifyObservers("redo");
+		}
 	}
 	
 }

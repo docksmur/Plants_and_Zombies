@@ -13,7 +13,6 @@ import javax.swing.JTextArea;
 
 import model.Npc;
 import model.PnZModel;
-
 import controller.PnZController;
 
 /**
@@ -56,6 +55,14 @@ public class PnZView extends JFrame implements Observer{
 		JTextArea ja = new JTextArea("Sun Points: "+ pnzm.getSunPoints());
 		ja.setEditable(false);
 		jp.add(ja);
+		b = new JButton("Undo");	//add a start button and a text field showing the sun points
+		b.setName("undo");
+		b.addActionListener(pnzc);
+		jp.add(b);
+		b = new JButton("Redo");	//add a start button and a text field showing the sun points
+		b.setName("redo");
+		b.addActionListener(pnzc);
+		jp.add(b);
 		this.setContentPane(jp);				//set the panel as the content pane
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -86,6 +93,7 @@ public class PnZView extends JFrame implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
+		System.out.println("update view");
 		JTextArea ja = (JTextArea) jp.getComponent(26);	//get the text box and update sun points
 		ja.setText("Sun Points: "+pnzm.getSunPoints());
 		if(pnzm.isRunning()){							//make sure game is still running

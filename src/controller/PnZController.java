@@ -46,6 +46,10 @@ public class PnZController implements ActionListener {
 		String name = b.getName();
 		if (name.equalsIgnoreCase("start")){	//if it's start start the wave
 			pnzm.startWave();
+		}else if (name.equalsIgnoreCase("undo")){	//if it's start start the wave
+			pnzm.undo();
+		}else if (name.equalsIgnoreCase("redo")){	//if it's start start the wave
+			pnzm.redo();
 		}else{
 			String[] things = name.split(",");	//otherwise it's a place plant so place a plant
 			int row = Integer.parseInt(things[1]);
