@@ -2,6 +2,7 @@ package model;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Stack;
 
 /**
  * 
@@ -17,6 +18,10 @@ public class Npc extends Observable implements Observer{
 	protected String type;	//name of this type of npc
 	protected int health;		//current health of the npc
 	protected int damage;		//the amount of damage the npc can do
+	protected int row;
+	protected int col;
+	protected Stack<Integer> oldHealth =  new Stack<Integer>();
+	protected Stack<Integer> futureHealth =  new Stack<Integer>();
 	
 	/**
 	 * Create an Npc
@@ -26,10 +31,12 @@ public class Npc extends Observable implements Observer{
 	 * @param damage the damage of the npc
 	 * @param pnz the observable
 	 */
-	public Npc(String type, int health, int damage, Observable pnz){
+	public Npc(String type, int health, int damage, int row, int col, Observable pnz){
 		this.type = type;		//set the type of npc
 		this.health = health;	//set its starting health
 		this.damage = damage;	//set the amount of damage
+		this.row = row;
+		this.col = col;
 	}
 	
 
@@ -100,8 +107,21 @@ public class Npc extends Observable implements Observer{
 
 	@Override
 	public void update(Observable o, Object obj) {
-		// TODO Auto-generated method stub
-		
+		oldHealth.push(health);
+	}
+	
+	public void undo(PnZModel pnzm){
+		if (!oldHealth.isEmpty()){
+			health = oldHealth.peek();
+			futureHealth.push(oldHealth.pop());
+		}
+	}
+	
+	public void redo(PnZModel pnzm){
+		if (!futureHealth.isEmpty()){
+			health = futureHealth.peek();
+			oldHealth.push(futureHealth.pop());
+		}
 	}
 
 }

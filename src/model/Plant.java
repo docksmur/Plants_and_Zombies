@@ -24,8 +24,8 @@ public class Plant extends Npc {
 	 * @param cost the cost in sun points
 	 * @param pnz the observable
 	 */
-	public Plant(String type, int health, int damage, int cost, Observable pnz){
-		super(type, health, damage, pnz);
+	public Plant(String type, int health, int damage, int cost, int row, int col, Observable pnz){
+		super(type, health, damage, row, col, pnz);
 		this.cost=cost;
 	}
 

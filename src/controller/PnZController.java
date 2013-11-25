@@ -50,6 +50,8 @@ public class PnZController implements ActionListener {
 			pnzm.undo();
 		}else if (name.equalsIgnoreCase("redo")){	//if it's start start the wave
 			pnzm.redo();
+		}else if (name.equalsIgnoreCase("restart")){	//if it's start start the wave
+			pnzv.playAgain();
 		}else{
 			String[] things = name.split(",");	//otherwise it's a place plant so place a plant
 			int row = Integer.parseInt(things[1]);

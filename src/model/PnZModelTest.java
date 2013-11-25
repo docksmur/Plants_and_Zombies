@@ -42,13 +42,6 @@ public class PnZModelTest {
 	}
 
 	@Test
-	public void testGetRowDamage() {
-		assertEquals(pnzm.getRowDamage(0),0);
-		pnzm.placePlant(0, 0, "Sunflower");
-		assert(pnzm.getRowDamage(0)>0);
-	}
-
-	@Test
 	public void testGetSunPoints() {
 		assertEquals(pnzm.getSunPoints(),100);
 		pnzm.placePlant(0, 0, "Sunflower");

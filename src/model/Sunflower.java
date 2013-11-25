@@ -21,10 +21,19 @@ public class Sunflower extends Plant implements Observer{
 	 * 
 	 * @param pnz the observable
 	 */
-	public Sunflower(Observable pnz){
-		super("Sunflower",1, 0, 1, pnz);
+	public Sunflower(Observable pnz, int row, int col){
+		super("Sunflower",1, 0, 1, row, col, pnz);
 		pnz.addObserver(this);
 		sunPoints=5;
+	}
+	
+	@Override
+	public int damaged(int damage){
+		int i = super.damaged(damage);
+		if (i==-1){
+			this.setDisabled();
+		}
+		return i;
 	}
 	
 	
@@ -34,15 +43,20 @@ public class Sunflower extends Plant implements Observer{
 	 * 
 	 * @param arg0 the observable
 	 */
-	public void play(Observable arg0){
-		PnZModel game = (PnZModel) arg0;
+	public void play(PnZModel game){
 		game.addSunPoints(sunPoints);		//add sun points to the game
 	}
 	
 	@Override
-	public void update(Observable arg0, Object arg1) {
-		if (((String)arg1).equalsIgnoreCase("move")){
-			play(arg0);
+	public void update(Observable o, Object obj) {
+		super.update(o, obj);
+		PnZModel pnzm = (PnZModel) o;
+		if (((String)obj).equalsIgnoreCase("plants")){
+			play(pnzm);
+		}else if (((String)obj).equalsIgnoreCase("undo")){
+			undo(pnzm);
+		}else if (((String)obj).equalsIgnoreCase("redo")){
+			redo(pnzm);
 		}
 	}
 	
@@ -53,5 +67,20 @@ public class Sunflower extends Plant implements Observer{
 		sunPoints=0;
 	}
 	
+	public void undo(PnZModel pnzm){
+		super.undo(pnzm);
+		if (pnzm.getGrid().get(row).get(col)==null){
+			sunPoints=0;
+		}
+	}
+	
+	public void redo(PnZModel pnzm){
+		super.redo(pnzm);
+		if (pnzm.getGrid().get(row).get(col)!=null){
+			if (pnzm.getGrid().get(row).get(col) instanceof Sunflower){
+				sunPoints=5;
+			}
+		}
+	}
 
 }

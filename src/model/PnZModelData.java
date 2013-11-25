@@ -23,8 +23,9 @@ public class PnZModelData {
 		grid = new ArrayList<ArrayList<Npc>>();
 		for (ArrayList<Npc> n : d.getGrid()){
 			grid.add((ArrayList<Npc>) n.clone());
-			System.out.println(""+grid);
+			System.out.println(""+grid.get(grid.size()-1));
 		}
+		System.out.println("\n");
 		sunPoints = d.getSunPoints();
 	}
 
@@ -42,6 +43,16 @@ public class PnZModelData {
 
 	public void setSunPoints(int sunPoints) {
 		this.sunPoints = sunPoints;
+	}
+
+	@Override
+	public String toString() {
+		String s = "PnZModelData [grid=";
+		for (ArrayList<Npc> n : getGrid()){
+			s+="\n" + n;
+		}
+		
+		return s;
 	}
 
 }

@@ -44,7 +44,7 @@ public class PnZModel extends Observable {
 		observers = new ArrayList<Observer>();						//list of observers
 		for (int i=0; i<5;i++){ 									//add 5 zombies both grid and list of upcomings
 			upcoming.add("zombie");									//add zombie to list of upcoming
-			data.getGrid().get(i).set(5, new Enemy("zombie", 5, 1, i, this));	//add zombie to grid
+			data.getGrid().get(i).set(5, new Enemy("zombie", 5, 1, i, 5, this));	//add zombie to grid
 			remaining+=1;											//there is now one more enemy
 		}
 	}
@@ -75,10 +75,10 @@ public class PnZModel extends Observable {
 	 */
 	public boolean placePlant(int row, int col, String type){
 		if (type.equalsIgnoreCase("Sunflower")){
-			Plant sf = new Sunflower(this);
+			Plant sf = new Sunflower(this, row, col);
 			return this.placePlant(row, col, sf);
 		}else if (type.equalsIgnoreCase("Pea Shooter")){
-			Plant ps = new PeaShooter(this);
+			Plant ps = new PeaShooter(this,row,col);
 			return this.placePlant(row, col, ps);
 		}
 		return false;
@@ -91,44 +91,28 @@ public class PnZModel extends Observable {
 	 */
 	public int startWave(){
 		moved();
-		ArrayList<Integer> validRows = new ArrayList<Integer>();		//list of rows with remaining enemies
-		Integer[] temp={0,1,2,3,4};										//all rows initially are active
-		validRows.addAll(Arrays.asList(temp));								//turn is the number of columns enemy grid overlaps the play grid
-		int damage = 0;
-		for (Integer row=0;row<5;row++){							//damage is calculated for each row
-			//System.out.println(""+this);
-			if (validRows.contains(row)){							//if this row is valid get the damage of plants in this row
-				damage = getRowDamage(row);
-				if (firstInRow(row)!=-1){							//if there is a monster find the first one
-					int col=firstInRow(row);
-					//System.out.println("row: "+row+" col: "+col);
-					if (data.getGrid().get(row).get(col).getClass()==Enemy.class){
-						if(col<5 && data.getGrid().get(row).get(col).damaged(damage)!=-1){		//damage the zombie
-							data.getGrid().get(row).set(col,null);
-							remaining-=1;
-						}
-					}
-				}else{											  	//all monsters in row defeated remove row from play
-					validRows.remove(row);
-												//System.out.println(" "+validRows+" "+row);
-				}
-			}
-		}
 		//System.out.println("notified");
 		this.setChanged();
 		notifyObservers("move");
 		this.setChanged();
-		notifyObservers("money");
+		notifyObservers("plants");
+		this.setChanged();
+		notifyObservers("update");
 		//System.out.println(""+this);
-		if(remaining==0){					//if there are no enemies by the end the game is over
+		if(remaining==0  || running == false){					//if there are no enemies by the end the game is over
 			running = false;
+			this.setChanged();
+			notifyObservers("over");
 			return PASS;
-		}else{										//otherwise the user has lost
+		}else{
+			this.setChanged();
+			notifyObservers("money");//otherwise the user has lost
 			return FAIL;
 		}
 	}
 
 	private void moved() {
+		System.out.println("moved");
 		undoStack.push(new PnZModelData(data));
 		redoStack.clear();
 	}
@@ -150,21 +134,6 @@ public class PnZModel extends Observable {
 		return -1;									//no valid enemies were found
 	}
 	
-	/**
-	 * Gets the damage of all the plants in a row
-	 * 
-	 * @param row the row to get the damage from
-	 * @return total damage of the row
-	 */
-	public int getRowDamage(int row){				//get the total damage a row will do to the first zombie
-		int damage = 0;
-		for (int col=0; col<5; col++){				//each plant in a row adds its damage
-			if (data.getGrid().get(row).get(col)!=null && data.getGrid().get(row).get(col) instanceof Plant){
-				damage += data.getGrid().get(row).get(col).getDamage();
-			}
-		}
-		return damage;
-	}
 	
 
 	/*		Main function for text based. 
@@ -337,6 +306,10 @@ public class PnZModel extends Observable {
 		return remaining;
 	}
 
+	public void lessRemaining(int numDest) {
+		this.remaining -= numDest;
+	}
+
 	public Stack<PnZModelData> getRedoStack() {
 		return redoStack;
 	}
@@ -355,11 +328,16 @@ public class PnZModel extends Observable {
 
 	public void undo() {
 		if (!undoStack.empty()){
-			System.out.println("undo!");
-			data = undoStack.peek();
+			//System.out.println("undo!\n"+data);
+			data = new PnZModelData( undoStack.peek());
 			redoStack.push(undoStack.pop());
 			setChanged();
 			notifyObservers("undo");
+			setChanged();
+			notifyObservers("update");
+			setChanged();
+			notifyObservers("update");
+			//System.out.println("undo!\n"+data);
 		}
 	}
 
@@ -369,7 +347,10 @@ public class PnZModel extends Observable {
 			undoStack.push(redoStack.pop());
 			setChanged();
 			notifyObservers("redo");
+			setChanged();
+			notifyObservers("update");
 		}
 	}
+
 	
 }
