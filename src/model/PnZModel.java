@@ -117,6 +117,8 @@ public class PnZModel extends Observable {
 		//System.out.println("notified");
 		this.setChanged();
 		notifyObservers("move");
+		this.setChanged();
+		notifyObservers("money");
 		//System.out.println(""+this);
 		if(remaining==0){					//if there are no enemies by the end the game is over
 			running = false;

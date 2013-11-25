@@ -38,7 +38,6 @@ public class PnZView extends JFrame implements Observer{
 		super();								//create a new frame for the game
 		jp = new JPanel(new GridLayout(6,5));	//create a grid layout for buttons
 		pnzm = new PnZModel();
-		pnzm.addObserver(this);					//add view as observer so it gets updated
 		pnzc = new PnZController(pnzm,this);	//new controller
 		for (int i=0; i<5; i++){
 			for (int j=0; j<5; j++){			//add 25 plant placing buttons
@@ -65,6 +64,7 @@ public class PnZView extends JFrame implements Observer{
 		jp.add(b);
 		this.setContentPane(jp);				//set the panel as the content pane
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		pnzm.addObserver(this);					//add view as observer so it gets updated
 	}
 	
 	public static void main(String[] args) {
@@ -93,44 +93,50 @@ public class PnZView extends JFrame implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("update view");
 		JTextArea ja = (JTextArea) jp.getComponent(26);	//get the text box and update sun points
+		String s = (String) arg;
 		ja.setText("Sun Points: "+pnzm.getSunPoints());
-		if(pnzm.isRunning()){							//make sure game is still running
-			for(int i=0; i<5; i++){
-				for(int j=0; j<5; j++){					//if it is running update the buttons to display whatever may be there in the grid
-					JButton b = (JButton)jp.getComponent((5*i)+j);
-					Npc type = pnzm.getGrid().get(i).get(j);
-					if(type != null){
-						b.setText(type.getType());
-						b.setEnabled(false);
-					}else{
-						b.setText("Place plant here");
-						b.setEnabled(true);
+		if (!s.equalsIgnoreCase("money")){
+			if(pnzm.isRunning()){							//make sure game is still running
+				for(int i=0; i<5; i++){
+					for(int j=0; j<5; j++){					//if it is running update the buttons to display whatever may be there in the grid
+						JButton b = (JButton)jp.getComponent((5*i)+j);
+						Npc type = pnzm.getGrid().get(i).get(j);
+						if(type != null){
+							b.setText(type.getType());
+							b.setEnabled(false);
+						}else{
+							b.setText("Place plant here");
+							b.setEnabled(true);
+						}
 					}
 				}
-			}
-			
-		}else{											//if not running disable all buttons after updating
-			for(int i=0; i<5; i++){
-				for(int j=0; j<5; j++){
-					JButton b = (JButton)jp.getComponent((5*i)+j);
-					Npc type = pnzm.getGrid().get(i).get(j);
-					if(type != null){
-						b.setText(type.getType());
-						b.setEnabled(false);
-					}else{
-						b.setText("Place plant here");
-						b.setEnabled(false);
+				
+			}else{											//if not running disable all buttons after updating
+				for(int i=0; i<5; i++){
+					for(int j=0; j<5; j++){
+						JButton b = (JButton)jp.getComponent((5*i)+j);
+						Npc type = pnzm.getGrid().get(i).get(j);
+						if(type != null){
+							b.setText(type.getType());
+							b.setEnabled(false);
+						}else{
+							b.setText("Place plant here");
+							b.setEnabled(false);
+						}
 					}
 				}
-			}
-			JButton b = (JButton)jp.getComponent(25);	//set start button disabled
-			b.setEnabled(false);
-			if(pnzm.getRemaining()==0){					//display if the user won or lost
-				JOptionPane.showMessageDialog(this, "Game Over you won");
-			}else{
-				JOptionPane.showMessageDialog(this, "Game Over you lost");
+				JButton b = (JButton)jp.getComponent(25);	//set start button disabled
+				b.setEnabled(false);
+				b = (JButton)jp.getComponent(27);	//set start button disabled
+				b.setEnabled(false);
+				b = (JButton)jp.getComponent(28);	//set start button disabled
+				b.setEnabled(false);
+				if(pnzm.getRemaining()==0){					//display if the user won or lost
+					JOptionPane.showMessageDialog(this, "Game Over you won");
+				}else{
+					JOptionPane.showMessageDialog(this, "Game Over you lost");
+				}
 			}
 		}
 	}

@@ -41,7 +41,9 @@ public class Sunflower extends Plant implements Observer{
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		play(arg0);
+		if (((String)arg1).equalsIgnoreCase("move")){
+			play(arg0);
+		}
 	}
 	
 	/**

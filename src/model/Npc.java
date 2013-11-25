@@ -31,6 +31,7 @@ public class Npc extends Observable implements Observer{
 		this.health = health;	//set its starting health
 		this.damage = damage;	//set the amount of damage
 	}
+	
 
 	@Override
 	public boolean equals(Object obj) {
