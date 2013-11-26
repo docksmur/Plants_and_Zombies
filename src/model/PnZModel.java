@@ -58,7 +58,7 @@ public class PnZModel extends Observable {
 	 */
 	public boolean placePlant(int row, int col, Plant plant){
 		if (this.data.getSunPoints() - plant.getCost()>=0){
-			moved();
+			moved();														//the board is changing so store the current state
 			data.getGrid().get(row).set(col, plant);						//place plant at specific row and column
 			this.data.setSunPoints(this.data.getSunPoints() - plant.getCost());					//subtract the cost of the plant
 			return true;
@@ -74,7 +74,7 @@ public class PnZModel extends Observable {
 	 * @param type string representing the type of plant that should be placed
 	 */
 	public boolean placePlant(int row, int col, String type){
-		if (type.equalsIgnoreCase("Sunflower")){
+		if (type.equalsIgnoreCase("Sunflower")){			//convert a string to the coresponding type of plant
 			Plant sf = new Sunflower(this, row, col);
 			return this.placePlant(row, col, sf);
 		}else if (type.equalsIgnoreCase("Pea Shooter")){
@@ -97,28 +97,28 @@ public class PnZModel extends Observable {
 		moved();
 		//System.out.println("notified");
 		this.setChanged();
-		notifyObservers("move");
+		notifyObservers("move");								//update to move zombies
 		this.setChanged();
-		notifyObservers("plants");
+		notifyObservers("plants");								//update to make plants damage
 		this.setChanged();
-		notifyObservers("update");
+		notifyObservers("update");								//update view
 		//System.out.println(""+this);
-		if(remaining==0  || running == false){					//if there are no enemies by the end the game is over
-			running = false;
+		if(remaining==0  || running == false){					//if there are no enemies by the end the game is over or something is over
+			running = false;									//it's over!
 			this.setChanged();
-			notifyObservers("over");
-			return PASS;
+			notifyObservers("over");							//update the board to show it's over
+			return PASS;										//return that it;s over
 		}else{
 			this.setChanged();
-			notifyObservers("money");//otherwise the user has lost
+			notifyObservers("money");							//update moneys
 			return FAIL;
 		}
 	}
 
 	private void moved() {
-		System.out.println("moved");
-		undoStack.push(new PnZModelData(data));
-		redoStack.clear();
+		//System.out.println("moved");
+		undoStack.push(new PnZModelData(data));				//add state to stack
+		redoStack.clear();									//if a new move is performed redo moves are overwriten
 	}
 
 	/**
@@ -333,26 +333,26 @@ public class PnZModel extends Observable {
 	public void undo() {
 		if (!undoStack.empty()){
 			//System.out.println("undo!\n"+data);
-			data = new PnZModelData( undoStack.peek());
-			redoStack.push(undoStack.pop());
+			data = new PnZModelData( undoStack.peek());		//get the last state  from the stack
+			redoStack.push(undoStack.pop());				//add the state to the redo stack
 			setChanged();
-			notifyObservers("undo");
+			notifyObservers("undo");						//do a undo update
 			setChanged();
-			notifyObservers("update");
+			notifyObservers("update");						//do a view update
 			setChanged();
-			notifyObservers("update");
+			notifyObservers("update");						//do ...another view update...? not sure about this.
 			//System.out.println("undo!\n"+data);
 		}
 	}
 
 	public void redo() {
 		if (!redoStack.empty()){
-			data = redoStack.peek();
-			undoStack.push(redoStack.pop());
+			data = redoStack.peek();				//get the next state
+			undoStack.push(redoStack.pop());		//store the old state
 			setChanged();
-			notifyObservers("redo");
+			notifyObservers("redo");				//do a redo update
 			setChanged();
-			notifyObservers("update");
+			notifyObservers("update");				//do a view update
 		}
 	}
 

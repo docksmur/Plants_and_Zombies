@@ -22,11 +22,11 @@ public class PnZModelData {
 	public PnZModelData(PnZModelData d) {
 		grid = new ArrayList<ArrayList<Npc>>();
 		for (ArrayList<Npc> n : d.getGrid()){
-			grid.add((ArrayList<Npc>) n.clone());
-			System.out.println(""+grid.get(grid.size()-1));
+			grid.add((ArrayList<Npc>) n.clone());				//create a clone of the arraylists
+			//System.out.println(""+grid.get(grid.size()-1));
 		}
-		System.out.println("\n");
-		sunPoints = d.getSunPoints();
+		//System.out.println("\n");
+		sunPoints = d.getSunPoints();							//store the sunpoints as well
 	}
 
 	public ArrayList<ArrayList<Npc>> getGrid() {
