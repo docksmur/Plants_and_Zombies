@@ -28,8 +28,11 @@ source being the model class or GUI where the main function is, and where the gr
 
 the listenersis made. The GUI utilizes the GridLayout class to create a grid of JButtons that
 
-utilize the functionality from the previous text based version of the game.
+utilize the functionality from the previous text based version of the game. The undo and redo
 
+features were done by keeping stacks of grid and sunpoints then delegating other changes to the
+
+appropriate classes. This way it's class is responsible for changing itself back.
 
 
 
@@ -67,3 +70,15 @@ into a 2d arraylist as opposed to a regular array. This was done because during 
 easily fixed this way or a lot of coding with arrays. I chose the easy way. Other than that most choices just follow 
 
 the design patterns like MVC and Observer/Observable etc.
+
+
+The grid and sunpoints were seperated into it's own class. This was done to ease storage for
+
+the undo and redo feature. Undo redo was implemented using a stack of grid + sunpoints. 
+
+damage by plants from  the model class to the plant classes. All NPCs now also manage their 
+
+locations to ease with damaging and stuff. yeaaaaaaaaaaaaaaaaaaaaaaaaaaaaah
+
+
+
