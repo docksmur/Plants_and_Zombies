@@ -81,6 +81,10 @@ public class PnZModel extends Observable {
 			Plant ps = new PeaShooter(this,row,col);
 			return this.placePlant(row, col, ps);
 		}
+		else if (type.equalsIgnoreCase("Potato Mine")){
+			Plant pm = new PotatoMine(this,row,col);
+			return this.placePlant(row, col, pm);
+		}
 		return false;
 	}
 	

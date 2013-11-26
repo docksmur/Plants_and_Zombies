@@ -56,7 +56,7 @@ public class PnZController implements ActionListener {
 			String[] things = name.split(",");	//otherwise it's a place plant so place a plant
 			int row = Integer.parseInt(things[1]);
 			int col = Integer.parseInt(things[2]);
-			Object[] possibilities = {"Sunflower", "Pea Shooter"};//get the type of plant
+			Object[] possibilities = {"Sunflower", "Pea Shooter", "Potato Mine"};//get the type of plant
 			String s = (String)JOptionPane.showInputDialog(new JFrame(),"What type of plant would you like to add?","Customized Dialog",
 			                    JOptionPane.QUESTION_MESSAGE, null, possibilities, "");
 			if (pnzm.placePlant(row, col, s)){	//only plant it if there is enough money
