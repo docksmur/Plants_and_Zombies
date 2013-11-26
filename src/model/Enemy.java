@@ -30,7 +30,7 @@ public class Enemy extends Npc {
 	 */
 	public Enemy(String type, int health, int damage,int row , int col, Observable pnz){
 		super(type, health, damage, row, col, pnz);
-		pnz.addObserver(this);
+		pnz.addObserver(this);						//add this to observer list
 	}
 	
 	/**
@@ -44,32 +44,32 @@ public class Enemy extends Npc {
 	 * @return
 	 */
 	public int move(ArrayList<ArrayList<Npc>> grid){
-		if(this.health!=0){
-			if (col<=0){
+		if(this.health!=0){		//if this enemy isn't dead
+			if (col<=0){		//if the enemy is at the end the game is over and you have lost
 				return -1;	
 			}
-			System.out.println("moving places");
-			if(grid.get(row).get(col-1)==null){
-				grid.get(row).set(col-1, this);
-				grid.get(row).set(col, null);
-				col--;
-				if(col <= 0){
+			//System.out.println("moving places");
+			if(grid.get(row).get(col-1)==null){	//if the next place the zombie is moving to is empty it can move
+				grid.get(row).set(col-1, this);	//zombie is in new place
+				grid.get(row).set(col, null);	//zombie is no longer in the old spot
+				col--;							//zombies column is now one less i.e. on closer to the end
+				if(col <= 0){					//if at the end the game is over
 					return -1;
 				}
 			}else{
-				if(grid.get(row).get(col-1).damaged(this.damage)!=-1){
-					grid.get(row).set(col-1, null);
+				if(grid.get(row).get(col-1).damaged(this.damage)!=-1){	//if there is something there attack it
+					grid.get(row).set(col-1, null);						//if the hit was a lethal hit the spot is now empty
 				}
 			}
 		}
-		return 0;
+		return 0;														//game didn't end
 	}
 	
 	@Override
 	public void update(Observable o, Object obj) {
-		PnZModel pnzm = ((PnZModel)o);
-		String s = (String) obj;
-		if (s.equalsIgnoreCase("move")){
+		PnZModel pnzm = ((PnZModel)o);				//cast observable as model
+		String s = (String) obj;					//get the update message
+		if (s.equalsIgnoreCase("move")){			//if it's a move update save the health then save location then move to new location
 			super.update(o, obj);
 			oldCols.push(col);
 			int over = move(pnzm.getGrid()); 	//move this zombie
@@ -78,17 +78,17 @@ public class Enemy extends Npc {
 			}
 		}
 		if (s.equalsIgnoreCase("undo")){
-			if (!oldCols.empty()){
+			if (!oldCols.empty()){					//if you can undo do so
 				futureCols.push(oldCols.peek());
-				col = oldCols.pop();
-				super.undo(pnzm);
+				col = oldCols.pop();				//store undo for redoing
+				super.undo(pnzm);					//restore health
 			}
 		}
 		if (s.equalsIgnoreCase("redo")){
-			if (!futureCols.empty()){
+			if (!futureCols.empty()){				//if you can redo do so
 				oldCols.push(futureCols.peek());
-				col = futureCols.pop();
-				super.redo(pnzm);
+				col = futureCols.pop();				//store redo for re-un-doing
+				super.redo(pnzm);					//restore health
 			}
 		}
 	}

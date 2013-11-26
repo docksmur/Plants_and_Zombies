@@ -15,13 +15,13 @@ import java.util.Stack;
 
 public class Npc extends Observable implements Observer{
 	
-	protected String type;	//name of this type of npc
+	protected String type;		//name of this type of npc
 	protected int health;		//current health of the npc
 	protected int damage;		//the amount of damage the npc can do
-	protected int row;
-	protected int col;
-	protected Stack<Integer> oldHealth =  new Stack<Integer>();
-	protected Stack<Integer> futureHealth =  new Stack<Integer>();
+	protected int row;			//row this npc is located in
+	protected int col;			//column this npc is located in
+	protected Stack<Integer> oldHealth =  new Stack<Integer>();			//stack containing previous healths so they can be restored later
+	protected Stack<Integer> futureHealth =  new Stack<Integer>();		//stack containing health after undo so the can be redone later
 	
 	/**
 	 * Create an Npc
@@ -43,7 +43,7 @@ public class Npc extends Observable implements Observer{
 	@Override
 	public boolean equals(Object obj) {
 		//System.out.println("equal compare");
-		if (this == obj)
+		if (this == obj)		//comparisons for equals
 			return true;
 		if (obj == null)
 			return false;
@@ -107,18 +107,18 @@ public class Npc extends Observable implements Observer{
 
 	@Override
 	public void update(Observable o, Object obj) {
-		oldHealth.push(health);
+		oldHealth.push(health);						//add old health that will be restored to on next undo
 	}
 	
 	public void undo(PnZModel pnzm){
-		if (!oldHealth.isEmpty()){
+		if (!oldHealth.isEmpty()){				//if there is an old health to restore to restore it
 			health = oldHealth.peek();
-			futureHealth.push(oldHealth.pop());
+			futureHealth.push(oldHealth.pop());	//store into redo stack so redo can be redone
 		}
 	}
 	
 	public void redo(PnZModel pnzm){
-		if (!futureHealth.isEmpty()){
+		if (!futureHealth.isEmpty()){			//if there is a new health that can be redone to make that the current health
 			health = futureHealth.peek();
 			oldHealth.push(futureHealth.pop());
 		}
