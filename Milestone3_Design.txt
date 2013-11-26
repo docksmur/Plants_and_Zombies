@@ -1,0 +1,60 @@
+Plants_and_Zombies game 
+
+SYSC 3110 MileStone 1 
+
+Date: November 11, 2013
+
+
+
+AUTHORS
+
+
+
+David Falardeau 100830500 
+
+Murdock Walsh 100852907 
+
+
+
+DESIGN CHOICES 
+
+
+
+The coding up to now implements a functional GUI based version of Plants v Zombies. The code 
+
+uses an Observer model for the plants and zombies to communicate with eachother, the event 
+
+source being the model class or GUI where the main function is, and where the grid that holds 
+
+the listenersis made. The GUI utilizes the GridLayout class to create a grid of JButtons that
+
+utilize the functionality from the previous text based version of the game. The undo and redo
+
+features were done by keeping stacks of grid and sunpoints then delegating other changes to the
+
+appropriate classes. This way it's class is responsible for changing itself back.
+
+
+
+CHANGES AND PLANS
+
+
+A new subclass of Plant has been added, namely Potato Mine, which explodes and destroys the first zombie it comes into contact
+
+with. A fully functional undo and redo feature has ben implemented into the GUI, including a restart feature
+
+The future roadmap for the project will involve the addition of more types of plants and zombies, as well as the 
+
+addition of Save/Load feature and a Level Builder mechanic.
+
+
+The grid and sunpoints were seperated into it's own class. This was done to ease storage for
+
+the undo and redo feature. Undo redo was implemented using a stack of grid + sunpoints. 
+
+damage by plants from  the model class to the plant classes. All NPCs now also manage their 
+
+locations to ease with damaging and stuff.
+
+
+
