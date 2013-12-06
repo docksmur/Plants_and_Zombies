@@ -101,7 +101,7 @@ public class PnZView extends JFrame implements Observer{
 		JTextArea ja = (JTextArea) jp.getComponent(26);	//get the text box and update sun points
 		String s = (String) arg;
 		ja.setText("Sun Points: "+pnzm.getSunPoints());
-		if(s.equalsIgnoreCase("update")){							//make sure game is still running
+		if(s.equalsIgnoreCase("update")){							//if this is a view update (update was passed as the object) update the view
 				for(int i=0; i<5; i++){
 					for(int j=0; j<5; j++){					//if it is running update the buttons to display whatever may be there in the grid
 						JButton b = (JButton)jp.getComponent((5*i)+j);
@@ -116,7 +116,7 @@ public class PnZView extends JFrame implements Observer{
 					}
 				}
 				
-			}else if(s.equalsIgnoreCase("over")){											//if not running disable all buttons after updating
+			}else if(s.equalsIgnoreCase("over")){											//if this update is signaling the end update accordingly
 				
 				for(int i=0; i<5; i++){
 					for(int j=0; j<5; j++){
@@ -145,6 +145,9 @@ public class PnZView extends JFrame implements Observer{
 			}
 		}
 
+	/**
+	 * Play the game again. Instead of reseting everything it just throws out the old and makes a whole new game
+	 */
 	public void playAgain() {
 		PnZView pzv = new PnZView();
 		pzv.setSize(900, 900);

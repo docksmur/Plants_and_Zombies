@@ -38,6 +38,12 @@ public class PnZController implements ActionListener {
 		this.pnzv = pnzv;
 	}
 
+	
+	/**
+	 * Performs one of the many possible actions based on what button was clicked
+	 * 
+	 * @param o the action event that was performed
+	 */
 	@Override
 	public void actionPerformed(ActionEvent o) {
 		Object o2 = o.getSource();

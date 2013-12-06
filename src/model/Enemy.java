@@ -39,10 +39,6 @@ public class Enemy extends Npc {
 	 * @param grid the grid it is moving on
 	 * @return whether it reached the end and ate the brains of the user
 	 */
-	/**
-	 * @param grid
-	 * @return
-	 */
 	public int move(ArrayList<ArrayList<Npc>> grid){
 		if(this.health!=0){		//if this enemy isn't dead
 			if (col<=0){		//if the enemy is at the end the game is over and you have lost
@@ -65,6 +61,7 @@ public class Enemy extends Npc {
 		return 0;														//game didn't end
 	}
 	
+	
 	@Override
 	public void update(Observable o, Object obj) {
 		PnZModel pnzm = ((PnZModel)o);				//cast observable as model
@@ -78,20 +75,30 @@ public class Enemy extends Npc {
 			}
 		}
 		if (s.equalsIgnoreCase("undo")){
-			if (!oldCols.empty()){					//if you can undo do so
-				futureCols.push(oldCols.peek());
-				col = oldCols.pop();				//store undo for redoing
-				super.undo(pnzm);					//restore health
-			}
+			undo(pnzm);
 		}
 		if (s.equalsIgnoreCase("redo")){
-			if (!futureCols.empty()){				//if you can redo do so
-				oldCols.push(futureCols.peek());
-				col = futureCols.pop();				//store redo for re-un-doing
-				super.redo(pnzm);					//restore health
-			}
+			redo(pnzm);
 		}
 	}
 	
+
+	@Override
+	public void redo(PnZModel pnzm) {
+		if (!futureCols.empty()){				//if you can redo do so
+			oldCols.push(col);
+			col = futureCols.pop();				//store redo for re-un-doing
+			super.redo(pnzm);					//restore health
+		}
+	}
+	
+	@Override
+	public void undo(PnZModel pnzm) {
+		if (!oldCols.empty()){					//if you can undo do so
+			futureCols.push(col);
+			col = oldCols.pop();				//store undo for redoing
+			super.undo(pnzm);					//restore health
+		}
+	}
 	
 }

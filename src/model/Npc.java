@@ -37,6 +37,7 @@ public class Npc extends Observable implements Observer{
 		this.damage = damage;	//set the amount of damage
 		this.row = row;
 		this.col = col;
+		oldHealth.push(health);
 	}
 	
 
@@ -96,6 +97,9 @@ public class Npc extends Observable implements Observer{
 	 * @return -1 if it wasn't a deadly hit or the extra damage if it was a deadly hit
 	 */
 	public int damaged(int damage){
+		if(damage == 0){
+			return -1;
+		}
 		if (damage>=health){		//if it is lethal damage return the excess damage
 			health = 0;
 			return damage-health;
@@ -105,23 +109,54 @@ public class Npc extends Observable implements Observer{
 		}
 	}
 
+	
 	@Override
 	public void update(Observable o, Object obj) {
 		oldHealth.push(health);						//add old health that will be restored to on next undo
 	}
 	
+	/**
+	 * Provides undo functionality to the npc
+	 * 
+	 * @param pnzm the Plants and Zombies Model Class. Not needed at this point
+	 */
 	public void undo(PnZModel pnzm){
 		if (!oldHealth.isEmpty()){				//if there is an old health to restore to restore it
-			health = oldHealth.peek();
-			futureHealth.push(oldHealth.pop());	//store into redo stack so redo can be redone
+			futureHealth.push(health);			//store into redo stack so redo can be redone
+			health = oldHealth.pop();
 		}
 	}
 	
+	/**
+	 * Provides redo functionality to the npc
+	 * 
+	 * @param pnzm the Plants and Zombies Model Class. Not needed at this point
+	 */
 	public void redo(PnZModel pnzm){
 		if (!futureHealth.isEmpty()){			//if there is a new health that can be redone to make that the current health
-			health = futureHealth.peek();
-			oldHealth.push(futureHealth.pop());
+			oldHealth.push(health);
+			health = futureHealth.pop();
 		}
+	}
+
+
+	public int getRow() {
+		return row;
+	}
+
+
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+
+	public int getCol() {
+		return col;
+	}
+
+
+	public void setCol(int col) {
+		this.col = col;
 	}
 
 }

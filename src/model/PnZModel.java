@@ -333,8 +333,8 @@ public class PnZModel extends Observable {
 	public void undo() {
 		if (!undoStack.empty()){
 			//System.out.println("undo!\n"+data);
-			data = new PnZModelData( undoStack.peek());		//get the last state  from the stack
-			redoStack.push(undoStack.pop());				//add the state to the redo stack
+			redoStack.push(data);							//add the state to the redo stack
+			data = new PnZModelData( undoStack.pop());		//get the last state  from the stack
 			setChanged();
 			notifyObservers("undo");						//do a undo update
 			setChanged();
@@ -347,8 +347,8 @@ public class PnZModel extends Observable {
 
 	public void redo() {
 		if (!redoStack.empty()){
-			data = redoStack.peek();				//get the next state
-			undoStack.push(redoStack.pop());		//store the old state
+			undoStack.push(data);					//store the old state
+			data = redoStack.pop();				//get the next state
 			setChanged();
 			notifyObservers("redo");				//do a redo update
 			setChanged();

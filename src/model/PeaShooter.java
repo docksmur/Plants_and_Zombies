@@ -74,7 +74,7 @@ public class PeaShooter extends Plant {
 		if (i == -1){							//if it dies it can't do damage any more
 			damage = 0;
 		}
-		return 0;
+		return i;
 	}
 	
 }
