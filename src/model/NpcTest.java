@@ -83,7 +83,7 @@ public class NpcTest {
 
 	@Test
 	public void testGetRow() {
-		fail("Not yet implemented");
+		assertEquals(npc.getRow(),0);
 	}
 
 	@Test
