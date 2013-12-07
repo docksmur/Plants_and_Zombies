@@ -88,17 +88,19 @@ public class NpcTest {
 
 	@Test
 	public void testSetRow() {
-		fail("Not yet implemented");
+		npc.setRow(1);
+		assertEquals(npc.getRow(),1);
 	}
 
 	@Test
 	public void testGetCol() {
-		fail("Not yet implemented");
+		assertEquals(npc.getCol(),0);
 	}
 
 	@Test
 	public void testSetCol() {
-		fail("Not yet implemented");
+		npc.setCol(6);
+		assertEquals(npc.getCol(),6);
 	}
 
 }
