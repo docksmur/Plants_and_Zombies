@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Observable;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Observable;
  * 
  */
 
-public class Plant extends Npc {
+public class Plant extends Npc implements Serializable{
 	
 	int cost;
 	

@@ -1,6 +1,8 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Observable;
+import java.util.Observer;
 
 /**
  * 
@@ -11,7 +13,7 @@ import java.util.Observable;
  * 
  */
 
-public class PeaShooter extends Plant {
+public class PeaShooter extends Plant implements Observer, Serializable {
 	
 	
 	

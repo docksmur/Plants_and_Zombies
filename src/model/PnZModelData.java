@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observer;
 
@@ -10,7 +11,7 @@ import java.util.Observer;
  * @author David Falardeau
  * @version ver 1.7
  */
-public class PnZModelData {
+public class PnZModelData implements Serializable {
 	
 	private ArrayList<ArrayList<Npc>> grid;							//the play grid
 	private int sunPoints;											//the sunPoints available to the player

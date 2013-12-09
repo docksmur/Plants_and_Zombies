@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Observable;
@@ -14,7 +15,7 @@ import java.util.Stack;
  * 
  */
 
-public class Enemy extends Npc {
+public class Enemy extends Npc implements Serializable{
 	
 	Stack<Integer> oldCols =  new Stack<Integer>();
 	Stack<Integer> futureCols =  new Stack<Integer>();

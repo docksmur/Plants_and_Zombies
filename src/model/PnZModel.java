@@ -1,13 +1,29 @@
 package model;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
 import java.util.Stack;
+
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
+import view.PnZView;
 
 /**
  * 
@@ -19,12 +35,13 @@ import java.util.Stack;
  *
  */
 
-public class PnZModel extends Observable {
+public class PnZModel extends Observable implements Serializable {
 
 	public static final int PASS=1;
 	public static final int FAIL=0;
 	private ArrayList<String> upcoming;						//list of upcoming enemies for user
-	private ArrayList<Observer> observers;					//list of observers
+	private transient ArrayList<Observer> observers;					//list of observers
+	private ArrayList<Observer> observers2;
 	private int remaining;									// number of remaining enemies
 	private boolean running;								//make sure game is still running
 	private PnZModelData data = new PnZModelData();
@@ -42,6 +59,7 @@ public class PnZModel extends Observable {
 		remaining=0;												//currently no enemies remaining
 		running=true;												//currently running
 		observers = new ArrayList<Observer>();						//list of observers
+		observers2 = new ArrayList<Observer>();
 		for (int i=0; i<5;i++){ 									//add 5 zombies both grid and list of upcomings
 			upcoming.add("zombie");									//add zombie to list of upcoming
 			data.getGrid().get(i).set(5, new Enemy("zombie", 5, 1, i, 5, this));	//add zombie to grid
@@ -61,6 +79,8 @@ public class PnZModel extends Observable {
 			moved();														//the board is changing so store the current state
 			data.getGrid().get(row).set(col, plant);						//place plant at specific row and column
 			this.data.setSunPoints(this.data.getSunPoints() - plant.getCost());					//subtract the cost of the plant
+			setChanged();
+			notifyObservers("update");
 			return true;
 		}
 		return false;
@@ -95,14 +115,14 @@ public class PnZModel extends Observable {
 	 */
 	public int startWave(){
 		moved();
-		//System.out.println("notified");
+		System.out.println("notified: "+observers);
 		this.setChanged();
 		notifyObservers("move");								//update to move zombies
 		this.setChanged();
 		notifyObservers("plants");								//update to make plants damage
 		this.setChanged();
 		notifyObservers("update");								//update view
-		//System.out.println(""+this);
+		System.out.println(""+this);
 		if(remaining==0  || running == false){					//if there are no enemies by the end the game is over or something is over
 			running = false;									//it's over!
 			this.setChanged();
@@ -275,11 +295,21 @@ public class PnZModel extends Observable {
 	
 	@Override
 	public void addObserver(Observer o){
+		if(o != null && !(o instanceof PnZView)){
+			observers2.add(o);
+		}
 		observers.add(o);
+	}
+	
+	public void setObservers(ArrayList<Observer> o){
+		observers = o;
 	}
 	
 	@Override
 	public void deleteObserver(Observer o){
+		if(o != null && !(o instanceof PnZView)){
+			observers2.remove(o);
+		}
 		observers.remove(o);
 	}
 	
@@ -354,6 +384,45 @@ public class PnZModel extends Observable {
 			setChanged();
 			notifyObservers("update");				//do a view update
 		}
+	}
+
+	public void save(File file) {
+		try {
+			FileOutputStream fo = new FileOutputStream(file);
+			ObjectOutputStream oo = new ObjectOutputStream(fo);
+			System.out.println(this.observers);
+			oo.writeObject(this);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	
+	}
+
+	public void load(File file, PnZView pnzv) {
+		try {
+			FileInputStream fi = new FileInputStream(file);
+			ObjectInputStream oo = new ObjectInputStream(fi);
+			try {
+				PnZModel pnzm = (PnZModel) oo.readObject();
+				pnzm.setObservers(pnzm.observers2);
+				pnzm.addObserver(pnzv);
+				pnzv.setPnzm(pnzm);
+				setChanged();
+				notifyObservers("update");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	
 	}
 
 	

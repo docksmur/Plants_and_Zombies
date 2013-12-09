@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Stack;
@@ -13,8 +14,12 @@ import java.util.Stack;
  * 
  */
 
-public class Npc extends Observable implements Observer{
+public class Npc extends Observable implements Observer, Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected String type;		//name of this type of npc
 	protected int health;		//current health of the npc
 	protected int damage;		//the amount of damage the npc can do

@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -24,12 +25,11 @@ import controller.PnZController;
  *
  */
 
-public class PnZView extends JFrame implements Observer{
+public class PnZView extends JFrame implements Observer, Serializable{
 	
-	private JPanel jp;				//the content pane
-	private PnZModel pnzm;			//the model
-	private PnZController pnzc;		//the controller
-	
+	private transient JPanel jp;				//the content pane
+	private transient PnZModel pnzm;			//the model
+	private transient PnZController pnzc;
 	
 	/**
 	 * create a new view
@@ -54,14 +54,26 @@ public class PnZView extends JFrame implements Observer{
 		JTextArea ja = new JTextArea("Sun Points: "+ pnzm.getSunPoints());
 		ja.setEditable(false);
 		jp.add(ja);
+		JPanel jpButton = new JPanel(new GridLayout(2,1));
 		b = new JButton("Undo");	//add a start button and a text field showing the sun points
 		b.setName("undo");
 		b.addActionListener(pnzc);
-		jp.add(b);
+		jpButton.add(b);
 		b = new JButton("Redo");	//add a start button and a text field showing the sun points
 		b.setName("redo");
 		b.addActionListener(pnzc);
-		jp.add(b);
+		jpButton.add(b);
+		jp.add(jpButton);
+		jpButton = new JPanel(new GridLayout(2,1));
+		b = new JButton("Save");	//add a start button and a text field showing the sun points
+		b.setName("save");
+		b.addActionListener(pnzc);
+		jpButton.add(b);
+		b = new JButton("Load");	//add a start button and a text field showing the sun points
+		b.setName("load");
+		b.addActionListener(pnzc);
+		jpButton.add(b);
+		jp.add(jpButton);
 		b = new JButton("Start Over");	//add a start button and a text field showing the sun points
 		b.setName("restart");
 		b.addActionListener(pnzc);
@@ -93,6 +105,8 @@ public class PnZView extends JFrame implements Observer{
 	 */
 	public void setPnzm(PnZModel pnzm) {
 		this.pnzm = pnzm;
+		this.pnzm.addObserver(this);
+		pnzc.setPnzm(pnzm);
 	}
 
 	@Override
@@ -117,7 +131,6 @@ public class PnZView extends JFrame implements Observer{
 				}
 				
 			}else if(s.equalsIgnoreCase("over")){											//if this update is signaling the end update accordingly
-				
 				for(int i=0; i<5; i++){
 					for(int j=0; j<5; j++){
 						JButton b = (JButton)jp.getComponent((5*i)+j);
@@ -133,9 +146,15 @@ public class PnZView extends JFrame implements Observer{
 				}
 				JButton b = (JButton)jp.getComponent(25);	//set start button disabled
 				b.setEnabled(false);
-				b = (JButton)jp.getComponent(27);	//set start button disabled
+				JPanel jpl = (JPanel)jp.getComponent(27);	//set undo/redo button disabled
+				b = (JButton) jpl.getComponent(0);
 				b.setEnabled(false);
-				b = (JButton)jp.getComponent(28);	//set start button disabled
+				b = (JButton) jpl.getComponent(1);
+				b.setEnabled(false);
+				jpl = (JPanel)jp.getComponent(28);	//set save/load button disabled
+				b = (JButton) jpl.getComponent(0);
+				b.setEnabled(false);
+				b = (JButton) jpl.getComponent(1);
 				b.setEnabled(false);
 				if(pnzm.getRemaining()==0){					//display if the user won or lost
 					JOptionPane.showMessageDialog(this, "Game Over you won");

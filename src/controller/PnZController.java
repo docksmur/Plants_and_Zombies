@@ -2,14 +2,15 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import model.PnZModel;
-
 import view.PnZView;
 
 /**
@@ -24,7 +25,7 @@ import view.PnZView;
 
 public class PnZController implements ActionListener {
 	
-	PnZModel pnzm;
+	private PnZModel pnzm;
 	PnZView pnzv;
 	
 	/**
@@ -34,7 +35,7 @@ public class PnZController implements ActionListener {
 	 * @param pnzv the view
 	 */
 	public PnZController(PnZModel pnzm, PnZView pnzv){
-		this.pnzm = pnzm;
+		this.setPnzm(pnzm);
 		this.pnzv = pnzv;
 	}
 
@@ -51,11 +52,21 @@ public class PnZController implements ActionListener {
 		b = (JButton) o2;						//make source a button and get its name
 		String name = b.getName();
 		if (name.equalsIgnoreCase("start")){	//if it's start start the wave
-			pnzm.startWave();
+			getPnzm().startWave();
 		}else if (name.equalsIgnoreCase("undo")){	//if it's start start the wave
-			pnzm.undo();
+			getPnzm().undo();
 		}else if (name.equalsIgnoreCase("redo")){	//if it's start start the wave
-			pnzm.redo();
+			getPnzm().redo();
+		}else if (name.equalsIgnoreCase("save")){	//if it's start start the wave
+			JFileChooser fc = new JFileChooser();
+			fc.showSaveDialog(b);
+			File file = fc.getSelectedFile();
+			getPnzm().save(file);
+		}else if (name.equalsIgnoreCase("load")){	//if it's start start the wave
+			JFileChooser fc = new JFileChooser();
+			fc.showOpenDialog(b);
+			File file = fc.getSelectedFile();
+			getPnzm().load(file, pnzv);
 		}else if (name.equalsIgnoreCase("restart")){	//if it's start start the wave
 			pnzv.playAgain();
 		}else{
@@ -65,15 +76,25 @@ public class PnZController implements ActionListener {
 			Object[] possibilities = {"Sunflower", "Pea Shooter", "Potato Mine"};//get the type of plant
 			String s = (String)JOptionPane.showInputDialog(new JFrame(),"What type of plant would you like to add?","Customized Dialog",
 			                    JOptionPane.QUESTION_MESSAGE, null, possibilities, "");
-			if (pnzm.placePlant(row, col, s)){	//only plant it if there is enough money
-				b.setText(s);
+			if (getPnzm().placePlant(row, col, s)){	//only plant it if there is enough money
+				/*b.setText(s);
 				b.setEnabled(false);
 				JTextArea ja = (JTextArea) pnzv.getContentPane().getComponent(26);
-				ja.setText("Sun Points: "+pnzm.getSunPoints());
+				ja.setText("Sun Points: "+pnzm.getSunPoints());*/
 			}else{								//otherwise tell the user they don't have enough money
 				JOptionPane.showMessageDialog(new JFrame(), "Placement Failed: out of money");
 			}
 		}
+	}
+
+
+	public PnZModel getPnzm() {
+		return pnzm;
+	}
+
+
+	public void setPnzm(PnZModel pnzm) {
+		this.pnzm = pnzm;
 	}
 
 }

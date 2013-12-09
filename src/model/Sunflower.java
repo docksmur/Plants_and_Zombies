@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -12,7 +13,7 @@ import java.util.Observer;
  * 
  */
 
-public class Sunflower extends Plant implements Observer{
+public class Sunflower extends Plant implements Observer, Serializable{
 	
 	public int sunPoints;
 	
