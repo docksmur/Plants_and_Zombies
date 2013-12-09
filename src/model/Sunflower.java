@@ -15,7 +15,7 @@ import java.util.Observer;
 
 public class Sunflower extends Plant implements Observer, Serializable{
 	
-	public int sunPoints;
+	private int sunPoints;
 	
 	/**
 	 * create new sunflower
@@ -31,7 +31,7 @@ public class Sunflower extends Plant implements Observer, Serializable{
 	@Override
 	public int damaged(int damage){				//if this plant dies stop it from making sun points
 		int i = super.damaged(damage);
-		if (i==-1){
+		if (i!=-1){
 			this.setDisabled();
 		}
 		return i;
@@ -82,6 +82,10 @@ public class Sunflower extends Plant implements Observer, Serializable{
 				sunPoints=5;
 			}
 		}
+	}
+
+	public int getSunPoints() {
+		return sunPoints;
 	}
 
 }

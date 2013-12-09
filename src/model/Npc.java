@@ -145,21 +145,33 @@ public class Npc extends Observable implements Observer, Serializable{
 	}
 
 
+	/**gets the current row
+	 * @return the row
+	 */
 	public int getRow() {
 		return row;
 	}
 
 
+	/**set a new row
+	 * @param row the new row
+	 */
 	public void setRow(int row) {
 		this.row = row;
 	}
 
 
+	/**gets the current column
+	 * @return the current column
+	 */
 	public int getCol() {
 		return col;
 	}
 
 
+	/**sets a new column
+	 * @param col the new column
+	 */
 	public void setCol(int col) {
 		this.col = col;
 	}

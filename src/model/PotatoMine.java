@@ -56,7 +56,12 @@ public class PotatoMine extends Plant implements Observer, Serializable{
 	public void undo(PnZModel pnzm){
 		super.undo(pnzm);
 		if (pnzm.getGrid().get(row).get(col)==null){
-			damage=0;
+			super.damage=0;
+		}
+		if (pnzm.getGrid().get(row).get(col)!=null){
+			if (pnzm.getGrid().get(row).get(col) instanceof PotatoMine){
+				super.damage=5;
+			}
 		}
 	}
 	
@@ -65,8 +70,11 @@ public class PotatoMine extends Plant implements Observer, Serializable{
 		super.redo(pnzm);
 		if (pnzm.getGrid().get(row).get(col)!=null){
 			if (pnzm.getGrid().get(row).get(col) instanceof PotatoMine){
-				damage=5;
+				super.damage=5;
 			}
+		}
+		if (pnzm.getGrid().get(row).get(col)==null){
+			super.damage=0;
 		}
 	}
 	
@@ -74,10 +82,10 @@ public class PotatoMine extends Plant implements Observer, Serializable{
 	@Override
 	public int damaged(int damage){
 		int i = super.damaged(damage);
-		if (i == -1){
+		if (i != -1){
 			damage = 0;
 		}
-		return 0;
+		return i;
 	}
 	
 }

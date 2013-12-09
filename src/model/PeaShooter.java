@@ -54,8 +54,13 @@ public class PeaShooter extends Plant implements Observer, Serializable {
 	@Override
 	public void undo(PnZModel pnzm){
 		super.undo(pnzm);								//call npc's undo
-		if (pnzm.getGrid().get(row).get(col)==null){	//if there is no longeran item in this location that means it's been removed
+		if (pnzm.getGrid().get(row).get(col)==null){	//if there is no longer an item in this location that means it's been removed
 			damage=0;									//if it's not there it can't do damage
+		}
+		if (pnzm.getGrid().get(row).get(col)!=null){						//if theres a peashoter in this location it is valid
+			if (pnzm.getGrid().get(row).get(col) instanceof PeaShooter){
+				damage=2;													//valid peashooters do 2 damage so make sure they're doing that
+			}
 		}
 	}
 	
@@ -67,13 +72,16 @@ public class PeaShooter extends Plant implements Observer, Serializable {
 				damage=2;													//valid peashooters do 2 damage so make sure they're doing that
 			}
 		}
+		if (pnzm.getGrid().get(row).get(col)==null){	//if there is no longer an item in this location that means it's been removed
+			damage=0;									//if it's not there it can't do damage
+		}
 	}
 	
 	
 	@Override
 	public int damaged(int damage){				//do damage
 		int i = super.damaged(damage);
-		if (i == -1){							//if it dies it can't do damage any more
+		if (i != -1){							//if it dies it can't do damage any more
 			damage = 0;
 		}
 		return i;

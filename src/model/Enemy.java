@@ -17,8 +17,10 @@ import java.util.Stack;
 
 public class Enemy extends Npc implements Serializable{
 	
-	Stack<Integer> oldCols =  new Stack<Integer>();
-	Stack<Integer> futureCols =  new Stack<Integer>();
+	public final static int LOSE = -1;
+	public final static int CONT = 0;
+	Stack<Integer> oldCols =  new Stack<Integer>();		//stack of old locations
+	Stack<Integer> futureCols =  new Stack<Integer>();	//stack of undone columns
 	
 	/**
 	 * Create a new enemy
@@ -43,7 +45,7 @@ public class Enemy extends Npc implements Serializable{
 	public int move(ArrayList<ArrayList<Npc>> grid){
 		if(this.health!=0){		//if this enemy isn't dead
 			if (col<=0){		//if the enemy is at the end the game is over and you have lost
-				return -1;	
+				return LOSE;	
 			}
 			//System.out.println("moving places");
 			if(grid.get(row).get(col-1)==null){	//if the next place the zombie is moving to is empty it can move
@@ -51,15 +53,17 @@ public class Enemy extends Npc implements Serializable{
 				grid.get(row).set(col, null);	//zombie is no longer in the old spot
 				col--;							//zombies column is now one less i.e. on closer to the end
 				if(col <= 0){					//if at the end the game is over
-					return -1;
+					return LOSE;
 				}
 			}else{
-				if(grid.get(row).get(col-1).damaged(this.damage)!=-1){	//if there is something there attack it
-					grid.get(row).set(col-1, null);						//if the hit was a lethal hit the spot is now empty
+				if(grid.get(row).get(col-1) instanceof Plant){
+					if(grid.get(row).get(col-1).damaged(this.damage)!=-1){	//if there is something there attack it
+						grid.get(row).set(col-1, null);						//if the hit was a lethal hit the spot is now empty
+					}
 				}
 			}
 		}
-		return 0;														//game didn't end
+		return CONT;														//game didn't end
 	}
 	
 	
@@ -75,15 +79,20 @@ public class Enemy extends Npc implements Serializable{
 				pnzm.setRunning(false);
 			}
 		}
-		if (s.equalsIgnoreCase("undo")){
+		if (s.equalsIgnoreCase("undo")){		//undo movement
 			undo(pnzm);
 		}
-		if (s.equalsIgnoreCase("redo")){
+		if (s.equalsIgnoreCase("redo")){		//redo movement
 			redo(pnzm);
 		}
 	}
 	
 
+	/** 
+	 * Redoes any movements as well as calling health restoring
+	 * 
+	 * @param pnzm the model of the game
+	 */
 	@Override
 	public void redo(PnZModel pnzm) {
 		if (!futureCols.empty()){				//if you can redo do so
@@ -93,12 +102,20 @@ public class Enemy extends Npc implements Serializable{
 		}
 	}
 	
+	/** 
+	 * Undoes any movements as well as calling health restoring
+	 * 
+	 * @param pnzm the model of the game
+	 */
 	@Override
 	public void undo(PnZModel pnzm) {
 		if (!oldCols.empty()){					//if you can undo do so
 			futureCols.push(col);
 			col = oldCols.pop();				//store undo for redoing
 			super.undo(pnzm);					//restore health
+			if (super.futureHealth.peek()==0){
+				pnzm.lessRemaining(-1);
+			}
 		}
 	}
 	

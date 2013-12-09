@@ -40,31 +40,35 @@ public class PnZModel extends Observable implements Serializable {
 	public static final int PASS=1;
 	public static final int FAIL=0;
 	private ArrayList<String> upcoming;						//list of upcoming enemies for user
-	private transient ArrayList<Observer> observers;					//list of observers
-	private ArrayList<Observer> observers2;
+	private transient ArrayList<Observer> observers;		//list of observers
+	private ArrayList<Observer> observers2;					//non transient copy of observers without view cuz well the view doesn't need to be stored and also it breaks things
 	private int remaining;									// number of remaining enemies
 	private boolean running;								//make sure game is still running
-	private PnZModelData data = new PnZModelData();
-	private Stack<PnZModelData> undoStack;
-	private Stack<PnZModelData> redoStack;
+	private PnZModelData data = new PnZModelData();			//the state of the data of the game
+	private Stack<PnZModelData> undoStack;					//former game states
+	private Stack<PnZModelData> redoStack;					//game states that have been undone
 	
 	
 	/**
 	 * constructor of the model
 	 */
 	public PnZModel(){
-		undoStack = new Stack<PnZModelData>();
+		undoStack = new Stack<PnZModelData>();						//init the undo and redo stakcs
 		redoStack = new Stack<PnZModelData>();
 		upcoming = new ArrayList<String>(); 						//initialize list of coming up
 		remaining=0;												//currently no enemies remaining
 		running=true;												//currently running
 		observers = new ArrayList<Observer>();						//list of observers
 		observers2 = new ArrayList<Observer>();
-		for (int i=0; i<5;i++){ 									//add 5 zombies both grid and list of upcomings
+		for (int i=0; i<4;i++){ 									//add 5 zombies both grid and list of upcomings
 			upcoming.add("zombie");									//add zombie to list of upcoming
 			data.getGrid().get(i).set(5, new Enemy("zombie", 5, 1, i, 5, this));	//add zombie to grid
 			remaining+=1;											//there is now one more enemy
 		}
+		data.getGrid().get(4).set(5, new BigZombie( 4, 5, this));
+		remaining+=1;
+		data.getGrid().get(0).set(6, new Enemy("zombie", 5, 1, 0, 6, this));
+		remaining+=1;
 	}
 	
 	/**
@@ -73,15 +77,16 @@ public class PnZModel extends Observable implements Serializable {
 	 * @param row the row to place the plant in
 	 * @param col the row to place the plant in
 	 * @param plant the plant that should be placed
+	 * @return boolean whether the plant was succesfully placed
 	 */
 	public boolean placePlant(int row, int col, Plant plant){
 		if (this.data.getSunPoints() - plant.getCost()>=0){
-			moved();														//the board is changing so store the current state
-			data.getGrid().get(row).set(col, plant);						//place plant at specific row and column
-			this.data.setSunPoints(this.data.getSunPoints() - plant.getCost());					//subtract the cost of the plant
+			moved();															//the board is changing so store the current state
+			data.getGrid().get(row).set(col, plant);							//place plant at specific row and column
+			this.data.setSunPoints(this.data.getSunPoints() - plant.getCost());	//subtract the cost of the plant
 			setChanged();
 			notifyObservers("update");
-			return true;
+			return true;														//return true becaue the plant was placed
 		}
 		return false;
 	}
@@ -92,20 +97,20 @@ public class PnZModel extends Observable implements Serializable {
 	 * @param row the row to place the plant in
 	 * @param col the row to place the plant in
 	 * @param type string representing the type of plant that should be placed
+	 * @return boolean whether the plant was succesfully placed
 	 */
 	public boolean placePlant(int row, int col, String type){
 		if (type.equalsIgnoreCase("Sunflower")){			//convert a string to the coresponding type of plant
 			Plant sf = new Sunflower(this, row, col);
-			return this.placePlant(row, col, sf);
+			return this.placePlant(row, col, sf);			//place the created plant and return its successfullness
 		}else if (type.equalsIgnoreCase("Pea Shooter")){
 			Plant ps = new PeaShooter(this,row,col);
 			return this.placePlant(row, col, ps);
-		}
-		else if (type.equalsIgnoreCase("Potato Mine")){
+		}else if (type.equalsIgnoreCase("Potato Mine")){
 			Plant pm = new PotatoMine(this,row,col);
 			return this.placePlant(row, col, pm);
 		}
-		return false;
+		return false;										//plant was not placed because the type couldn't be found
 	}
 	
 	/**
@@ -114,15 +119,15 @@ public class PnZModel extends Observable implements Serializable {
 	 * @return PASS if you won, FAIL if you lost or are continuing 
 	 */
 	public int startWave(){
-		moved();
-		System.out.println("notified: "+observers);
+		moved();												//game is changing so store the state
+		//System.out.println("notified: "+observers);			
 		this.setChanged();
 		notifyObservers("move");								//update to move zombies
 		this.setChanged();
 		notifyObservers("plants");								//update to make plants damage
 		this.setChanged();
 		notifyObservers("update");								//update view
-		System.out.println(""+this);
+		//System.out.println(""+this);
 		if(remaining==0  || running == false){					//if there are no enemies by the end the game is over or something is over
 			running = false;									//it's over!
 			this.setChanged();
@@ -149,7 +154,7 @@ public class PnZModel extends Observable implements Serializable {
 	 */
 	public int firstInRow(int row){					//find the first zombie in a given row
 		for (int i=0;i<10;i++){						//for all columns
-			if (data.getGrid().get(row).get(i)!=null && data.getGrid().get(row).get(i).getClass()==Enemy.class){				//if there is an entity
+			if (data.getGrid().get(row).get(i)!=null && data.getGrid().get(row).get(i) instanceof Enemy){				//if there is an entity
 				if (data.getGrid().get(row).get(i).getHealth()>0){	//and it isn't dead
 					return i;						//return the column it is in
 				}
@@ -228,7 +233,7 @@ public class PnZModel extends Observable implements Serializable {
 	}
 */
 	@Override
-	public String toString() {
+	public String toString() {						//make a string of these things
 		String show="";
 		for(int row=0;row<5;row++){
 			for(Npc n:data.getGrid().get(row)){
@@ -294,19 +299,19 @@ public class PnZModel extends Observable implements Serializable {
 	}
 	
 	@Override
-	public void addObserver(Observer o){
-		if(o != null && !(o instanceof PnZView)){
+	public void addObserver(Observer o){				//overridden because a second observers is need for storage
+		if(o != null && !(o instanceof PnZView)){		//add everything except the view to the storage observer list
 			observers2.add(o);
 		}
 		observers.add(o);
 	}
 	
-	public void setObservers(ArrayList<Observer> o){
+	public void setObservers(ArrayList<Observer> o){	//overridden for duplicate list
 		observers = o;
 	}
 	
 	@Override
-	public void deleteObserver(Observer o){
+	public void deleteObserver(Observer o){				//overridden for duplicate list
 		if(o != null && !(o instanceof PnZView)){
 			observers2.remove(o);
 		}
@@ -340,26 +345,44 @@ public class PnZModel extends Observable implements Serializable {
 		return remaining;
 	}
 
+	/**
+	 * @param numDest
+	 */
 	public void lessRemaining(int numDest) {
 		this.remaining -= numDest;
 	}
 
+	/**
+	 * @return
+	 */
 	public Stack<PnZModelData> getRedoStack() {
 		return redoStack;
 	}
 
+	/**
+	 * @param redoStack
+	 */
 	public void setRedoStack(Stack<PnZModelData> redoStack) {
 		this.redoStack = redoStack;
 	}
 
+	/**
+	 * @return
+	 */
 	public Stack<PnZModelData> getUndoStack() {
 		return undoStack;
 	}
 
+	/**
+	 * @param undoStack
+	 */
 	public void setUndoStack(Stack<PnZModelData> undoStack) {
 		this.undoStack = undoStack;
 	}
 
+	/**
+	 * undo the last change to the game state
+	 */
 	public void undo() {
 		if (!undoStack.empty()){
 			//System.out.println("undo!\n"+data);
@@ -375,10 +398,13 @@ public class PnZModel extends Observable implements Serializable {
 		}
 	}
 
+	/**
+	 * redo changes to the latest game state
+	 */
 	public void redo() {
 		if (!redoStack.empty()){
 			undoStack.push(data);					//store the old state
-			data = redoStack.pop();				//get the next state
+			data = redoStack.pop();					//get the next state
 			setChanged();
 			notifyObservers("redo");				//do a redo update
 			setChanged();
@@ -386,13 +412,17 @@ public class PnZModel extends Observable implements Serializable {
 		}
 	}
 
+	/**save the state of the game to the disk
+	 * 
+	 * @param file the file the game should save to
+	 */
 	public void save(File file) {
-		try {
-			FileOutputStream fo = new FileOutputStream(file);
-			ObjectOutputStream oo = new ObjectOutputStream(fo);
-			System.out.println(this.observers);
-			oo.writeObject(this);
-		} catch (FileNotFoundException e) {
+		try {													//try writing the current state to disk
+			FileOutputStream fo = new FileOutputStream(file);	//file output stream for the user selected file
+			ObjectOutputStream oo = new ObjectOutputStream(fo);	//object output stream from the file output stream
+			//System.out.println(this.observers);
+			oo.writeObject(this);								//write this object which has the state
+		} catch (FileNotFoundException e) {						//if there is an error writing the file print the appropriate response
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -401,24 +431,26 @@ public class PnZModel extends Observable implements Serializable {
 	
 	}
 
+	/**load a game state from the disk
+	 * 
+	 * @param file the file's location
+	 * @param pnzv the view
+	 */
 	public void load(File file, PnZView pnzv) {
-		try {
-			FileInputStream fi = new FileInputStream(file);
-			ObjectInputStream oo = new ObjectInputStream(fi);
-			try {
-				PnZModel pnzm = (PnZModel) oo.readObject();
-				pnzm.setObservers(pnzm.observers2);
-				pnzm.addObserver(pnzv);
-				pnzv.setPnzm(pnzm);
-				setChanged();
-				notifyObservers("update");
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {													//try reading from disk
+			FileInputStream fi = new FileInputStream(file);		//input stream from user selection
+			ObjectInputStream oo = new ObjectInputStream(fi);	//object stream
+			PnZModel pnzm = (PnZModel) oo.readObject();			//read an object from the file
+			pnzm.setObservers(pnzm.observers2);					//restore the observer list
+			pnzm.addObserver(pnzv);								//re-add the view to the observer list (it souldn't be stored for some reason...)
+			pnzv.setPnzm(pnzm);									//change the view to look at the new model
+			setChanged();
+			notifyObservers("update");							//update grid to show loaded game
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		
