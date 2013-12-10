@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class PnZModelTest {
 	
-	PnZModel pnzm;
+	private PnZModel pnzm;
 
 	@Before
 	public void setUp() throws Exception {

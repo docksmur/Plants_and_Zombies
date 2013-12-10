@@ -15,8 +15,6 @@ import java.util.Observer;
 
 public class PeaShooter extends Plant implements Observer, Serializable {
 	
-	
-	
 	/**
 	 * Create a pea shooter
 	 * 

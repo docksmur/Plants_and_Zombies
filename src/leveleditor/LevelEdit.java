@@ -14,12 +14,25 @@ import view.PnZView;
 import model.Enemy;
 import model.Npc;
 
+/**
+ * Level editor program for Plants and Zombies
+ * Sets zombies that will spawn for this level
+ * 
+ * @author Murdock Walsh
+ * @author David Falardeau
+ * @version ver 2.1
+ * 
+ */
+
 public class LevelEdit extends Observable implements Serializable{
 	
 	private ArrayList<ArrayList<Npc>> grid;
 	private transient ArrayList<Observer> observers;		//list of observers
 	private ArrayList<Observer> observers2;					//non transient copy of observers without view cuz well the view doesn't need to be stored and also it breaks things
 
+	/**
+	 * create a new model for level editor
+	 */
 	public LevelEdit(){
 		observers = new ArrayList<Observer>();
 		observers2 = new ArrayList<Observer>();
@@ -32,12 +45,23 @@ public class LevelEdit extends Observable implements Serializable{
 		}
 	}
 
+	/**place a new enemy on the grid
+	 * 
+	 * @param row row the zombie should be on
+	 * @param col column the zombie should be placed
+	 * @param enemy the enemy that will be placed
+	 */
 	public void placeEnemy(int row, int col, Enemy enemy) {
 		grid.get(row).set(col, enemy);
 		setChanged();
 		notifyObservers();
 	}
 	
+	/**place enemy again but with a string instead of a enemy object
+	 * @param row row the zombie is placed in
+	 * @param col column the zombie will be placed
+	 * @param s name of the type of enemy to be placed
+	 */
 	public void placeEnemy(int row, int col, String s) {
 		if (s.equalsIgnoreCase("zombie")){
 			placeEnemy(row,col, new Enemy("zombie", 5, 1, row, col, this));
@@ -45,10 +69,16 @@ public class LevelEdit extends Observable implements Serializable{
 			
 	}
 
+	/**return the grid of enemies
+	 * @return the grid of enemies
+	 */
 	public ArrayList<ArrayList<Npc>> getGrid() {
 		return grid;
 	}
 
+	/**saves the current set up as a level to be played in plants and zombies
+	 * @param file
+	 */
 	public void save(File file) {
 		try {													//try writing the current state to disk
 			FileOutputStream fo = new FileOutputStream(file);	//file output stream for the user selected file
@@ -62,6 +92,9 @@ public class LevelEdit extends Observable implements Serializable{
 		}
 	}
 	
+	/**get the (non-view) observers of this class
+	 * @return all non-view observers
+	 */
 	public ArrayList<Observer> getObservers(){
 		return observers2;
 	}
@@ -74,6 +107,9 @@ public class LevelEdit extends Observable implements Serializable{
 		observers.add(o);
 	}
 	
+	/**set the observers of this class
+	 * @param o the new list of observers
+	 */
 	public void setObservers(ArrayList<Observer> o){	//overridden for duplicate list
 		observers = o;
 	}

@@ -7,8 +7,8 @@ import org.junit.Test;
 
 public class SunflowerTest {
 
-	PnZModel pnzm;
-	Sunflower sf;
+	private PnZModel pnzm;
+	private Sunflower sf;
 	
 	@Before
 	public void setUp() throws Exception {

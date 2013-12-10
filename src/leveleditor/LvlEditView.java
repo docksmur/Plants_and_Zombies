@@ -14,12 +14,25 @@ import model.Npc;
 import model.PnZModel;
 import controller.PnZController;
 
+/**
+ * Level editor program for Plants and Zombies
+ * Sets zombies that will spawn for this level
+ * 
+ * @author Murdock Walsh
+ * @author David Falardeau
+ * @version ver 2.1
+ * 
+ */
+
 public class LvlEditView extends JFrame implements Observer {
 	
 	private transient JPanel jp;				//the content pane
 	private transient LevelEdit le;			//the model
 	private transient LvlEditController lec;
 
+	/**
+	 * create a new level edit view
+	 */
 	public LvlEditView(){
 		super();								//create a new frame for the game
 		jp = new JPanel(new GridLayout(6,5));	//create a grid layout for buttons
@@ -49,6 +62,9 @@ public class LvlEditView extends JFrame implements Observer {
 		lev.setVisible(true);
 	}
 
+	/**
+	 * update the display with new zombies that have been added
+	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		for(int i=0; i<5; i++){

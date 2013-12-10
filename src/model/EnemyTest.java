@@ -8,8 +8,8 @@ import org.junit.Test;
 
 public class EnemyTest {
 
-	Enemy en;
-	PnZModel pnzm;
+	private Enemy en;
+	private PnZModel pnzm;
 	
 	@Before
 	public void setUp() throws Exception {

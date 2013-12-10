@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class BigZombieTest {
 	
-	BigZombie bz;
+	private BigZombie bz;
 
 	@Before
 	public void setUp() throws Exception {

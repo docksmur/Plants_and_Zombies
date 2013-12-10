@@ -7,8 +7,8 @@ import org.junit.Test;
 
 public class PeaShooterTest {
 
-	PnZModel pnzm;
-	PeaShooter ps;
+	private PnZModel pnzm;
+	private PeaShooter ps;
 	
 	@Before
 	public void setUp() throws Exception {

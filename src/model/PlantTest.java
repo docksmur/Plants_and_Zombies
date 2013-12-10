@@ -8,8 +8,8 @@ import org.junit.Test;
 
 public class PlantTest {
 	
-	Plant pl;
-	PnZModel pnzm;
+	private Plant pl;
+	private PnZModel pnzm;
 
 	@Before
 	public void setUp() throws Exception {

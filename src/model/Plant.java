@@ -14,7 +14,7 @@ import java.util.Observable;
 
 public class Plant extends Npc implements Serializable{
 	
-	int cost;
+	private int cost;
 	
 	/**
 	 * Create a plant

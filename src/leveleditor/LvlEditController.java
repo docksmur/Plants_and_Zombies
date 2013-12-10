@@ -13,16 +13,33 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import model.PnZModel;
 import view.PnZView;
 
+/**
+ * Level editor program for Plants and Zombies
+ * Sets zombies that will spawn for this level
+ * 
+ * @author Murdock Walsh
+ * @author David Falardeau
+ * @version ver 2.1
+ * 
+ */
+
 public class LvlEditController implements ActionListener {
 	
-	LevelEdit le;
-	LvlEditView lev;
+	private LevelEdit le;
+	private LvlEditView lev;
 	
+	/**create a controller for the level editor
+	 * @param le level editor model
+	 * @param lev level editor view
+	 */
 	public LvlEditController(LevelEdit le, LvlEditView lev){
 		this.le = le;
 		this.lev = lev;
 	}
 
+	/**
+	 * add a zombie or save the level depending on which button was pushed
+	 */
 	@Override
 	public void actionPerformed(ActionEvent o) {
 		Object o2 = o.getSource();						//get the source of the action event
@@ -36,6 +53,9 @@ public class LvlEditController implements ActionListener {
 		}
 	}
 
+	/**open a file window for the user to select save name and location
+	 * @param b button source for window placement
+	 */
 	private void save(JButton b) {
 		JFileChooser fc = new JFileChooser();					//prompt the user for the file name and location
 		FileNameExtensionFilter filter = 
@@ -46,6 +66,9 @@ public class LvlEditController implements ActionListener {
 		le.save(file);
 	}
 
+	/**place an enemy
+	 * @param name string with info for the zombie
+	 */
 	private void enemyPlace(String name) {
 		String[] things = name.split(",");										//split on commas to get "type", "row#", "col#"
 		int row = Integer.parseInt(things[1]);									//name is of the format "type,#,#" where the numbers are row and column respectively

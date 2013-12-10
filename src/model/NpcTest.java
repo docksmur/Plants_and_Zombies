@@ -8,8 +8,8 @@ import org.junit.Test;
 
 public class NpcTest {
 
-	Npc npc;
-	PnZModel pnzm;
+	private Npc npc;
+	private PnZModel pnzm;
 	
 	@Before
 	public void setUp() throws Exception {
