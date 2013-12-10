@@ -19,8 +19,8 @@ public class Enemy extends Npc implements Serializable{
 	
 	public final static int LOSE = -1;
 	public final static int CONT = 0;
-	Stack<Integer> oldCols =  new Stack<Integer>();		//stack of old locations
-	Stack<Integer> futureCols =  new Stack<Integer>();	//stack of undone columns
+	private Stack<Integer> oldCols =  new Stack<Integer>();		//stack of old locations
+	private Stack<Integer> futureCols =  new Stack<Integer>();	//stack of undone columns
 	
 	/**
 	 * Create a new enemy
