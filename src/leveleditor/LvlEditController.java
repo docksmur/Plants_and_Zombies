@@ -2,10 +2,13 @@ package leveleditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.PnZModel;
 import view.PnZView;
@@ -27,10 +30,20 @@ public class LvlEditController implements ActionListener {
 		b = (JButton) o2;								//make source a button and get its name
 		String name = b.getName();
 		if (name.equalsIgnoreCase("save")){
-			save();
+			save(b);
 		}else{											//if it is nothing else it must be placing a plant
 			enemyPlace(name);							
 		}
+	}
+
+	private void save(JButton b) {
+		JFileChooser fc = new JFileChooser();					//prompt the user for the file name and location
+		FileNameExtensionFilter filter = 
+				new FileNameExtensionFilter("Plants and Zombies Level", "lvl");
+		fc.setFileFilter(filter);
+		fc.showSaveDialog(b);									//open the save dialog
+		File file = new File(fc.getSelectedFile()+".lvl");		//make a .ser file object from the user's selection
+		le.save(file);
 	}
 
 	private void enemyPlace(String name) {
@@ -42,9 +55,4 @@ public class LvlEditController implements ActionListener {
 		                    JOptionPane.QUESTION_MESSAGE, null, possibilities, "");
 		le.placeEnemy(row, col, s);
 	}
-
-	private void save() {
-		
-	}
-
 }

@@ -69,21 +69,23 @@ public class Enemy extends Npc implements Serializable{
 	
 	@Override
 	public void update(Observable o, Object obj) {
-		PnZModel pnzm = ((PnZModel)o);				//cast observable as model
-		String s = (String) obj;					//get the update message
-		if (s.equalsIgnoreCase("move")){			//if it's a move update save the health then save location then move to new location
-			super.update(o, obj);
-			oldCols.push(col);
-			int over = move(pnzm.getGrid()); 	//move this zombie
-			if (over==-1){						//end if the zombie is at the end
-				pnzm.setRunning(false);
+		if(o instanceof PnZModel){
+			PnZModel pnzm = ((PnZModel)o);				//cast observable as model
+			String s = (String) obj;					//get the update message
+			if (s.equalsIgnoreCase("move")){			//if it's a move update save the health then save location then move to new location
+				super.update(o, obj);
+				oldCols.push(col);
+				int over = move(pnzm.getGrid()); 	//move this zombie
+				if (over==-1){						//end if the zombie is at the end
+					pnzm.setRunning(false);
+				}
 			}
-		}
-		if (s.equalsIgnoreCase("undo")){		//undo movement
-			undo(pnzm);
-		}
-		if (s.equalsIgnoreCase("redo")){		//redo movement
-			redo(pnzm);
+			if (s.equalsIgnoreCase("undo")){		//undo movement
+				undo(pnzm);
+			}
+			if (s.equalsIgnoreCase("redo")){		//redo movement
+				redo(pnzm);
+			}
 		}
 	}
 	

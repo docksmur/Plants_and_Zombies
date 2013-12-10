@@ -23,6 +23,7 @@ import java.util.Stack;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
+import leveleditor.LevelEdit;
 import view.PnZView;
 
 /**
@@ -455,6 +456,25 @@ public class PnZModel extends Observable implements Serializable {
 		}
 		
 	
+	}
+	
+	public void loadLevel(File file, PnZView pnzv){
+		try {													//try reading from disk
+			FileInputStream fi = new FileInputStream(file);		//input stream from user selection
+			ObjectInputStream oo = new ObjectInputStream(fi);	//object stream
+			LevelEdit le = ((LevelEdit) oo.readObject());		//read an object from the file
+			data.setGrid(le.getGrid());
+			observers = le.getObservers();
+			this.addObserver(pnzv);
+			setChanged();
+			notifyObservers("update");							//update grid to show loaded game
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	

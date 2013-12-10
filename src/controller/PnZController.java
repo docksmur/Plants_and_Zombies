@@ -64,11 +64,24 @@ public class PnZController implements ActionListener {
 			load(b);
 		}else if (name.equalsIgnoreCase("restart")){	//if it's restart play again
 			pnzv.playAgain();
+		}else if (name.equalsIgnoreCase("level")){	//if it's restart play again
+			level(b);
 		}else{											//if it is nothing else it must be placing a plant
 			plantPlace(name);							
 		}
 	}
 	
+	private void level(JButton b) {
+		JFileChooser fc = new JFileChooser();	//create the file selection prompt
+		FileNameExtensionFilter filter = 		//create a filter so only ser files appear
+				new FileNameExtensionFilter("Plants and Zombies Level", "lvl");
+		fc.setFileFilter(filter);				//add the filter to the prompt
+		fc.showOpenDialog(b);					//display the prompt
+		File file = fc.getSelectedFile();		//create file from user selection
+		getPnzm().loadLevel(file, pnzv);				//load the new game
+	}
+
+
 	/**
 	 * Handles the save functionality in this class i.e. getting the file
 	 * 

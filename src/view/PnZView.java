@@ -47,14 +47,20 @@ public class PnZView extends JFrame implements Observer, Serializable{
 				jp.add(b);
 			}
 		}
+		JPanel jpButton = new JPanel(new GridLayout(2,1));
 		JButton b = new JButton("Start Wave");	//add a start button and a text field showing the sun points
 		b.setName("start");
 		b.addActionListener(pnzc);
-		jp.add(b);
+		jpButton.add(b);
+		b = new JButton("Start Over");	//add a start button and a text field showing the sun points
+		b.setName("restart");
+		b.addActionListener(pnzc);
+		jpButton.add(b);
+		jp.add(jpButton);
 		JTextArea ja = new JTextArea("Sun Points: "+ pnzm.getSunPoints());
 		ja.setEditable(false);
 		jp.add(ja);
-		JPanel jpButton = new JPanel(new GridLayout(2,1));
+		jpButton = new JPanel(new GridLayout(2,1));
 		b = new JButton("Undo");	//add a start button and a text field showing the sun points
 		b.setName("undo");
 		b.addActionListener(pnzc);
@@ -74,8 +80,8 @@ public class PnZView extends JFrame implements Observer, Serializable{
 		b.addActionListener(pnzc);
 		jpButton.add(b);
 		jp.add(jpButton);
-		b = new JButton("Start Over");	//add a start button and a text field showing the sun points
-		b.setName("restart");
+		b = new JButton("Load Level");	//add a start button and a text field showing the sun points
+		b.setName("level");
 		b.addActionListener(pnzc);
 		jp.add(b);
 		this.setContentPane(jp);				//set the panel as the content pane
@@ -144,17 +150,16 @@ public class PnZView extends JFrame implements Observer, Serializable{
 						}
 					}
 				}
-				JButton b = (JButton)jp.getComponent(25);	//set start button disabled
+				JPanel jpl = (JPanel) jp.getComponent(25);	//set start button disabled
+				JButton b = (JButton) jpl.getComponent(0);
 				b.setEnabled(false);
-				JPanel jpl = (JPanel)jp.getComponent(27);	//set undo/redo button disabled
+				jpl = (JPanel)jp.getComponent(27);	//set undo/redo button disabled
 				b = (JButton) jpl.getComponent(0);
 				b.setEnabled(false);
 				b = (JButton) jpl.getComponent(1);
 				b.setEnabled(false);
 				jpl = (JPanel)jp.getComponent(28);	//set save/load button disabled
 				b = (JButton) jpl.getComponent(0);
-				b.setEnabled(false);
-				b = (JButton) jpl.getComponent(1);
 				b.setEnabled(false);
 				if(pnzm.getRemaining()==0){					//display if the user won or lost
 					JOptionPane.showMessageDialog(this, "Game Over you won");

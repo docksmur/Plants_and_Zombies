@@ -24,9 +24,10 @@ public class LvlEditView extends JFrame implements Observer {
 		super();								//create a new frame for the game
 		jp = new JPanel(new GridLayout(6,5));	//create a grid layout for buttons
 		le = new LevelEdit();
+		le.addObserver(this);
 		lec = new LvlEditController(le, this);	//new controller
 		for (int i=0; i<5; i++){
-			for (int j=0; j<5; j++){			//add 25 plant placing buttons
+			for (int j=5; j<10; j++){			//add 25 plant placing buttons
 				JButton b = new JButton("Place enemy here");
 				b.setName("button,"+i+","+j);
 				b.addActionListener(lec);
@@ -53,12 +54,12 @@ public class LvlEditView extends JFrame implements Observer {
 		for(int i=0; i<5; i++){
 			for(int j=0; j<5; j++){					//if it is running update the buttons to display whatever may be there in the grid
 				JButton b = (JButton)jp.getComponent((5*i)+j);
-				Npc type =  le.getGrid().get(i).get(j);
+				Npc type =  le.getGrid().get(i).get(j+5);
 				if(type != null){
 					b.setText(type.getType());
 					b.setEnabled(false);
 				}else{
-					b.setText("Place plant here");
+					b.setText("Place enemy here");
 					b.setEnabled(true);
 				}
 			}
