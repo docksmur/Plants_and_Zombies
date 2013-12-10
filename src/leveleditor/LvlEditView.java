@@ -56,6 +56,12 @@ public class LvlEditView extends JFrame implements Observer {
 		//le.addObserver(this);					//add view as observer so it gets updated
 	}
 	
+	
+	
+	/** I mean it's a main function
+	 * it makes the view load and thus everything load
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		LvlEditView lev = new LvlEditView();
 		lev.setSize(900, 900);

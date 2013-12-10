@@ -131,11 +131,17 @@ public class PnZController implements ActionListener {
 	}
 
 
+	/**get the model
+	 * @return the model
+	 */
 	public PnZModel getPnzm() {					//get the model
 		return pnzm;
 	}
 
 
+	/**set the model
+	 * @param pnzm the new model
+	 */
 	public void setPnzm(PnZModel pnzm) {		//set a new model
 		this.pnzm = pnzm;
 	}

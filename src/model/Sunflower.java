@@ -28,6 +28,9 @@ public class Sunflower extends Plant implements Observer, Serializable{
 		sunPoints=5;									//this plant generates 5 sun points per turn
 	}
 	
+	/** stop the sunflower producing sun points when destroyed
+	 * @see model.Npc#damaged(int)
+	 */
 	@Override
 	public int damaged(int damage){				//if this plant dies stop it from making sun points
 		int i = super.damaged(damage);
@@ -68,6 +71,10 @@ public class Sunflower extends Plant implements Observer, Serializable{
 		sunPoints=0;
 	}
 	
+	/** undoes stuff that this did and was done to it
+	 * @see model.Npc#undo(model.PnZModel)
+	 */
+	@Override
 	public void undo(PnZModel pnzm){
 		super.undo(pnzm);			//call npc undo
 		if (pnzm.getGrid().get(row).get(col)==null){	//if this is no longer valid plant disable it
@@ -75,6 +82,9 @@ public class Sunflower extends Plant implements Observer, Serializable{
 		}
 	}
 	
+	/** redoes stuff that this did and was done to it
+	 * @see model.Npc#undo(model.PnZModel)
+	 */
 	public void redo(PnZModel pnzm){
 		super.redo(pnzm);			//call npc redo
 		if (pnzm.getGrid().get(row).get(col)!=null){	//if this is a valid plant ensure it produces sun points
@@ -84,6 +94,9 @@ public class Sunflower extends Plant implements Observer, Serializable{
 		}
 	}
 
+	/**get the amount of sun points this flower makes
+	 * @return the amount of sunflowers it produces
+	 */
 	public int getSunPoints() {
 		return sunPoints;
 	}

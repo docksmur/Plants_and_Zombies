@@ -141,6 +141,9 @@ public class PnZModel extends Observable implements Serializable {
 		}
 	}
 
+	/**
+	 * store the current state of the game before it is changed
+	 */
 	private void moved() {
 		//System.out.println("moved");
 		undoStack.push(new PnZModelData(data));				//add state to stack
@@ -307,6 +310,10 @@ public class PnZModel extends Observable implements Serializable {
 		observers.add(o);
 	}
 	
+	/**
+	 * set a new list of observers
+	 * @param o the new list of observers
+	 */
 	public void setObservers(ArrayList<Observer> o){	//overridden for duplicate list
 		observers = o;
 	}
@@ -353,29 +360,29 @@ public class PnZModel extends Observable implements Serializable {
 		this.remaining -= numDest;
 	}
 
-	/**
-	 * @return
+	/** gets the redo moces stakc
+	 * @return the redo stack
 	 */
 	public Stack<PnZModelData> getRedoStack() {
 		return redoStack;
 	}
 
-	/**
-	 * @param redoStack
+	/**sets the redo stack
+	 * @param redoStack new stack
 	 */
 	public void setRedoStack(Stack<PnZModelData> redoStack) {
 		this.redoStack = redoStack;
 	}
 
-	/**
-	 * @return
+	/** get the undo stack
+	 * @return undo stack
 	 */
 	public Stack<PnZModelData> getUndoStack() {
 		return undoStack;
 	}
 
-	/**
-	 * @param undoStack
+	/**set a new undo stack
+	 * @param undoStack new undo stack
 	 */
 	public void setUndoStack(Stack<PnZModelData> undoStack) {
 		this.undoStack = undoStack;
@@ -458,6 +465,11 @@ public class PnZModel extends Observable implements Serializable {
 	
 	}
 	
+	/**Load a level of enemies from a save file. created in the level editor
+	 * 
+	 * @param file file we are reading from
+	 * @param pnzv the view of this game
+	 */
 	public void loadLevel(File file, PnZView pnzv){
 		try {													//try reading from disk
 			FileInputStream fi = new FileInputStream(file);		//input stream from user selection

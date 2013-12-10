@@ -38,6 +38,9 @@ public class PeaShooter extends Plant implements Observer, Serializable {
 		}
 	}
 
+	/** damage the first valid enemy
+	 * @param pnzm the model for this game
+	 */
 	private void damage(PnZModel pnzm) {
 		int i = pnzm.firstInRow(row);		//find first enemy
 		if (i<5 && i>col){					//if it's in a valid location do damage
@@ -76,6 +79,9 @@ public class PeaShooter extends Plant implements Observer, Serializable {
 	}
 	
 	
+	/** disables this object from doing anything useful if it gets a lethal hit
+	 * @see model.Npc#damaged(int)
+	 */
 	@Override
 	public int damaged(int damage){				//do damage
 		int i = super.damaged(damage);

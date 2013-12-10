@@ -40,6 +40,9 @@ public class PotatoMine extends Plant implements Observer, Serializable{
 		}
 	}
 
+	/**does damage to the enemy next to it
+	 * @param pnzm the model of this game
+	 */
 	private void damage(PnZModel pnzm) {
 		int i = pnzm.firstInRow(row);
 		if (i<5 && i>col && col==i-1){
@@ -79,6 +82,9 @@ public class PotatoMine extends Plant implements Observer, Serializable{
 	}
 	
 	
+	/** disables the mine as well as putting it's health to 0
+	 * @see model.Npc#damaged(int)
+	 */
 	@Override
 	public int damaged(int damage){
 		int i = super.damaged(damage);
