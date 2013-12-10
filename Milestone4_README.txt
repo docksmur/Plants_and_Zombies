@@ -54,7 +54,7 @@ Basic Game. (kinda boring...)
 	6. Click on the save button to create a file containing the current state of the instance of the game,
 	   or the load button to open a previous saved instance of the game. Click the 
 	   Start Over button at any point to create a completely new instance of the game.
-	5. continue adding plants and advancing the waves until your plants eliminate all of the zombies, or
+	7. continue adding plants and advancing the waves until your plants eliminate all of the zombies, or
 	   until one of the zombies makes their way to the other side of the grid.
 
 OPTIONAL INSTRUCTIONS
