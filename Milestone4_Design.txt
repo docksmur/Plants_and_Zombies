@@ -34,11 +34,27 @@ utilize the functionality from the previous text based version of the game. The 
 
 features were done by keeping stacks of grid and sunpoints then delegating other changes to the
 
-appropriate classes. This way it's class is responsible for changing itself back.
+appropriate classes. This way it's class is responsible for changing itself back. The save and load
+
+features were done using java serialization. This was done because it seemed like the easiest solution
+
+and was relatively painless. To start the model class is serialized which causes all its feilds to be
+
+serialized. An error occured when the view tried to serialize so the other observers were split off
+
+so they could still be saved. The view can just be created from information in data any ways
 
 
 
 CHANGES AND PLANS
+
+
+
+Save and load were added to the model which handles saving everything by delegating to each class 
+
+to serialize itself. A level editor was also created which is pretty much entirely seperate from the
+
+actual game, sharing only Enemy and BigZombie as far as I can remember
 
 
 A new subclass of Plant has been added, namely Potato Mine, which explodes and destroys the first zombie it comes into contact
