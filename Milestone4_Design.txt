@@ -54,7 +54,13 @@ Save and load were added to the model which handles saving everything by delegat
 
 to serialize itself. A level editor was also created which is pretty much entirely seperate from the
 
-actual game, sharing only Enemy and BigZombie as far as I can remember
+actual game, sharing only Enemy and BigZombie as far as I can remember. The move method in Enemy has been fixed
+
+to use constants, the variables from all classes have been made privately scoped, tests for model and all classes
+
+used by model have been implemented, and the undo and redo functionality have been fixed. A tougher class of Enemy
+
+, BigZombie, has been added, and all JAVADOCs and commenting has been updated fully.
 
 
 
