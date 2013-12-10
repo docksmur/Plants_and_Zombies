@@ -57,22 +57,5 @@ to serialize itself. A level editor was also created which is pretty much entire
 actual game, sharing only Enemy and BigZombie as far as I can remember
 
 
-A new subclass of Plant has been added, namely Potato Mine, which explodes and destroys the first zombie it comes into contact
-
-with. A fully functional undo and redo feature has ben implemented into the GUI, including a restart feature
-
-The future roadmap for the project will involve the addition of more types of plants and zombies, as well as the 
-
-addition of Save/Load feature and a Level Builder mechanic.
-
-
-The grid and sunpoints were seperated into it's own class. This was done to ease storage for
-
-the undo and redo feature. Undo redo was implemented using a stack of grid + sunpoints. 
-
-damage by plants from  the model class to the plant classes. All NPCs now also manage their 
-
-locations to ease with damaging and stuff.
-
 
 
