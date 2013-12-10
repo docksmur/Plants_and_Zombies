@@ -26,7 +26,7 @@ import model.Npc;
 
 public class LevelEdit extends Observable implements Serializable{
 	
-	private ArrayList<ArrayList<Npc>> grid;
+	private ArrayList<ArrayList<Npc>> grid;					//grid of zombies and big zombies
 	private transient ArrayList<Observer> observers;		//list of observers
 	private ArrayList<Observer> observers2;					//non transient copy of observers without view cuz well the view doesn't need to be stored and also it breaks things
 
@@ -37,7 +37,7 @@ public class LevelEdit extends Observable implements Serializable{
 		observers = new ArrayList<Observer>();
 		observers2 = new ArrayList<Observer>();
 		grid = new ArrayList<ArrayList<Npc>>(5);
-		for (int i=0; i<5;i++){ 									//add 5 zombies both grid and list of upcomings
+		for (int i=0; i<5;i++){ 
 			grid.add(new ArrayList<Npc>(10));
 			for (int j=0; j<10;j++){								//fill the grid with nulls so there can be empty spaces between entities
 				grid.get(i).add(null);

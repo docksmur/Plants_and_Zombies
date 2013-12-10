@@ -1,4 +1,4 @@
-package leveleditor;
+  package leveleditor;
 
 import java.awt.GridLayout;
 import java.util.Observable;

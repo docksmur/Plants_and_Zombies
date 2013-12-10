@@ -7,8 +7,8 @@ import org.junit.Test;
 
 public class PotatoMineTest {
 
-	public PotatoMine pm;
-	public PnZModel pnzm;
+	private PotatoMine pm;
+	private PnZModel pnzm;
 	
 	@Before
 	public void setUp() throws Exception {
